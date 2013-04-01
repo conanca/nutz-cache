@@ -1,4 +1,4 @@
-package com.dolplay.nutzcache.test.service;
+package com.dolplay.nutzcache.assets.service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,9 +18,9 @@ import com.dolplay.nutzcache.CacheType;
 import com.dolplay.nutzcache.Order;
 import com.dolplay.nutzcache.annotation.Cache;
 import com.dolplay.nutzcache.annotation.CacheKeySuffix;
+import com.dolplay.nutzcache.assets.domain.User;
 import com.dolplay.nutzcache.dao.AdvancedCacheDao;
 import com.dolplay.nutzcache.service.AdvancedCacheIdEntityService;
-import com.dolplay.nutzcache.test.domain.User;
 
 /**
  * @author Conanca

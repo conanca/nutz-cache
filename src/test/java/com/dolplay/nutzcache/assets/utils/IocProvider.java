@@ -1,4 +1,4 @@
-package com.dolplay.nutzcache.test;
+package com.dolplay.nutzcache.assets.utils;
 
 import org.nutz.ioc.Ioc;
 import org.nutz.ioc.impl.NutIoc;

@@ -1,4 +1,4 @@
-package com.dolplay.nutzcache.test.domain;
+package com.dolplay.nutzcache.assets.domain;
 
 import java.util.Date;
 
@@ -64,4 +64,15 @@ public class User {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof User)) {
+			return false;
+		}
+		User user = (User) obj;
+		return user.id == id && user.name.equals(name) && user.gender.equals(gender)
+				&& user.description.equals(description) && user.birthday.equals(birthday);
+	}
+
 }

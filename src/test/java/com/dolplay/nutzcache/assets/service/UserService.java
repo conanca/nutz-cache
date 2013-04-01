@@ -1,4 +1,4 @@
-package com.dolplay.nutzcache.test.service;
+package com.dolplay.nutzcache.assets.service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,9 +12,9 @@ import com.dolplay.nutzcache.CStrings;
 import com.dolplay.nutzcache.CacheKeyPrefix;
 import com.dolplay.nutzcache.annotation.Cache;
 import com.dolplay.nutzcache.annotation.CacheKeySuffix;
+import com.dolplay.nutzcache.assets.domain.User;
 import com.dolplay.nutzcache.dao.CacheDao;
 import com.dolplay.nutzcache.service.CacheIdEntityService;
-import com.dolplay.nutzcache.test.domain.User;
 
 /**
  * @author Conanca

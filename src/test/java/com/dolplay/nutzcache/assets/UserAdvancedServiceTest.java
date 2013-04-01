@@ -1,4 +1,4 @@
-package com.dolplay.nutzcache.test;
+package com.dolplay.nutzcache.assets;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -16,8 +16,9 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-import com.dolplay.nutzcache.test.domain.User;
-import com.dolplay.nutzcache.test.service.UserAdvancedService;
+import com.dolplay.nutzcache.assets.domain.User;
+import com.dolplay.nutzcache.assets.service.UserAdvancedService;
+import com.dolplay.nutzcache.assets.utils.IocProvider;
 
 public class UserAdvancedServiceTest {
 	private static Logger logger = LoggerFactory.getLogger(UserAdvancedServiceTest.class);
