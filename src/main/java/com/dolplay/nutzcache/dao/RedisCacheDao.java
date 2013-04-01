@@ -64,6 +64,10 @@ public class RedisCacheDao implements CacheDao {
 		return valueJson;
 	}
 
+	public <T> T get(String cacheKey, Class<T> type) throws Exception {
+		return JSON.parseObject(get(cacheKey), type);
+	}
+
 	public long remove(String... cacheKeys) throws Exception {
 		Jedis jedis = null;
 		Long count = null;
@@ -127,4 +131,5 @@ public class RedisCacheDao implements CacheDao {
 		}
 		return keySet;
 	}
+
 }

@@ -9,7 +9,7 @@ import java.util.Set;
  */
 public interface CacheDao {
 	/**
-	 * 增加一个缓存，如果存在将更新该缓存。注：缓存超时时间由配置文件配置
+	 * 指定缓存名往缓存中增加一个值，如果存在将更新该缓存。注：缓存超时时间由配置文件配置
 	 * @param cacheKey
 	 * @param cacheValue
 	 * @throws Exception
@@ -17,7 +17,7 @@ public interface CacheDao {
 	public void set(String cacheKey, Object cacheValue) throws Exception;
 
 	/**
-	 * 增加一个缓存，如果存在将更新该缓存。可指定缓存超时时间，如果超时时间小于等于0，则为永久缓存
+	 * 指定缓存名往缓存中增加一个值，如果存在将更新该缓存。可指定缓存超时时间，如果超时时间小于等于0，则为永久缓存
 	 * @param cacheKey
 	 * @param timeout
 	 * @param cacheValue
@@ -25,11 +25,20 @@ public interface CacheDao {
 	public void set(String cacheKey, int timeout, Object cacheValue) throws Exception;
 
 	/**
-	 * 根据缓存名获取一个缓存的值
+	 * 根据缓存名从缓存中获取一个JSON格式的值
 	 * @param cacheKey
 	 * @return
 	 */
 	public String get(String cacheKey) throws Exception;
+
+	/**
+	 * 根据缓存名和对象类型从缓存中获取一个对象
+	 * @param cacheKey
+	 * @param type
+	 * @return
+	 * @throws Exception
+	 */
+	public <T> T get(String cacheKey, Class<T> type) throws Exception;
 
 	/**
 	 * 删除一个或多个缓存。
