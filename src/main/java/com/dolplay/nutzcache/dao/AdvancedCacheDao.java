@@ -35,7 +35,7 @@ public interface AdvancedCacheDao extends CacheDao {
 
 	/**
 	 * 查询有序集缓存，按照区间及排序方式
-	 * 如：startIndex=0 endIndex=9 order=Order.Desc，按倒序取第1条-第10条
+	 * 如：startIndex=0 endIndex=9 order=Order.Desc，按第1条-第10条，然后按倒序返回一个list
 	 *        （查全部的：startIndex=0 endIndex=-1）
 	 * @param cacheKey
 	 * @param startIndex
@@ -48,7 +48,7 @@ public interface AdvancedCacheDao extends CacheDao {
 
 	/**
 	 * 查询有序集缓存，按照区间
-	 * 如：startIndex=0 endIndex=9 order=Order.Desc，按倒序取第1条-第10条
+	 * 如：startIndex=0 endIndex=9，取第1条-第10条，返回一个list
 	 *        （查全部的：startIndex=0 endIndex=-1）
 	 * @param cacheKey
 	 * @param startIndex
@@ -60,7 +60,7 @@ public interface AdvancedCacheDao extends CacheDao {
 
 	/**
 	 * 查询有序集缓存，按照score值范围及排序方式
-	 * minScore=1997 maxScore=2013 order=Order.Desc，按倒序取score值在1997-2013的
+	 * minScore=1997 maxScore=2013 order=Order.Desc，取score值在1997-2013的，然后按倒序返回一个list
 	 * （查全部的：minScore=0 maxScore=-1）
 	 * @param cacheKey
 	 * @param minScore
@@ -73,7 +73,7 @@ public interface AdvancedCacheDao extends CacheDao {
 
 	/**
 	 * 查询有序集缓存，按照score值范围
-	 * minScore=1997 maxScore=2013 order=Order.Desc，按倒序取score值在1997-2013的
+	 * minScore=1997 maxScore=2013，取score值在1997-2013的，返回一个list
 	 * （查全部的：minScore=0 maxScore=-1）
 	 * @param cacheKey
 	 * @param minScore
