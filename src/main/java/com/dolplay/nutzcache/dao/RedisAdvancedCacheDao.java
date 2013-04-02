@@ -27,8 +27,8 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 		Jedis jedis = null;
 		try {
 			jedis = jedisPool.getResource();
-			boolean isNew = !jedis.exists(cacheKey);
 			jedis.zadd(cacheKey, score, item);
+			boolean isNew = !jedis.exists(cacheKey);
 			if (isNew && seconds > 0) {
 				jedis.expire(cacheKey, seconds);
 			}
