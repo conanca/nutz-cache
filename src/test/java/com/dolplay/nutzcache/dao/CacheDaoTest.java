@@ -78,12 +78,9 @@ public class CacheDaoTest {
 
 	@Test
 	public void testSetTimeout() throws Exception {
-		cacheDao.set("test:testSetTimeout:name", 3, "testSetTimeout");
-		assertTrue(jedis.exists("test:testSetTimeout:name"));
-		Thread.sleep(1000);
-		assertTrue(jedis.exists("test:testSetTimeout:name"));
-		Thread.sleep(5000);
-		assertFalse(jedis.exists("test:testSetTimeout:name"));
+		cacheDao.set("test:testSetTimeout:name", 300, "testSetTimeout");
+		assertTrue(jedis.exists("test:testSet:name"));
+		assertTrue(300L == jedis.ttl("test:testSetTimeout:name"));
 	}
 
 	@Test
