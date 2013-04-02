@@ -61,7 +61,6 @@ public interface AdvancedCacheDao extends CacheDao {
 	/**
 	 * 查询有序集缓存，按照score值范围及排序方式
 	 * minScore=1997 maxScore=2013 order=Order.Desc，取score值在1997-2013的，然后按倒序返回一个list
-	 * （查全部的：minScore=0 maxScore=-1）
 	 * @param cacheKey
 	 * @param minScore
 	 * @param maxScore
@@ -74,7 +73,6 @@ public interface AdvancedCacheDao extends CacheDao {
 	/**
 	 * 查询有序集缓存，按照score值范围
 	 * minScore=1997 maxScore=2013，取score值在1997-2013的，返回一个list
-	 * （查全部的：minScore=0 maxScore=-1）
 	 * @param cacheKey
 	 * @param minScore
 	 * @param maxScore

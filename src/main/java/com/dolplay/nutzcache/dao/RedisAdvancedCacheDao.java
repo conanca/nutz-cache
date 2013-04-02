@@ -97,7 +97,7 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 			if (order.equals(Order.Asc)) {
 				valueSet = jedis.zrangeByScore(cacheKey, minScore, maxScore);
 			} else {
-				valueSet = jedis.zrevrangeByScore(cacheKey, minScore, maxScore);
+				valueSet = jedis.zrevrangeByScore(cacheKey, maxScore, minScore);
 			}
 			valueList = new ArrayList<String>();
 			valueList.addAll(valueSet);
