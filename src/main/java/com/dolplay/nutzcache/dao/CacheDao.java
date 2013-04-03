@@ -17,7 +17,7 @@ public interface CacheDao {
 	public void set(String cacheKey, Object cacheValue) throws Exception;
 
 	/**
-	 * 指定缓存名往缓存中增加一个值，如果存在将更新该缓存。可指定缓存超时时间，如果超时时间小于等于0，则为永久缓存
+	 * 指定缓存名往缓存中增加一个值，如果存在将更新该缓存。可指定缓存超时时间(秒)，如果超时时间小于等于0，则为永久缓存
 	 * @param cacheKey
 	 * @param timeout
 	 * @param cacheValue
@@ -48,7 +48,7 @@ public interface CacheDao {
 	public long remove(String... cacheKeys) throws Exception;
 
 	/**
-	 * 为给定缓存设置超时时间，当缓存 过期时(超时时间为 0 )，它会被自动删除
+	 * 为给定缓存设置超时时间(秒)，当缓存 过期时(超时时间为 0 )，它会被自动删除
 	 * @param cacheKey
 	 * @param seconds
 	 * @return

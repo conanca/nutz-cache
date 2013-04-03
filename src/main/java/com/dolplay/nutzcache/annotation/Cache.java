@@ -32,7 +32,7 @@ public @interface Cache {
 	public CacheType cacheType() default CacheType.String;
 
 	/**
-	 * 指明缓存超时时间，超过这个时间该缓存将被删除。如果超时时间小于等于0，则为永久缓存。
+	 * 指明缓存超时时间(秒)，超过这个时间该缓存将被删除。如果超时时间小于等于0，则为永久缓存。
 	 * 缺省则使用配置文件中所配置的超时时间
 	 * @return
 	 */

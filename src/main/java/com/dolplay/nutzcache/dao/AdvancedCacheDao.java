@@ -13,7 +13,7 @@ public interface AdvancedCacheDao extends CacheDao {
 
 	/**
 	 * 为有序集缓存的值增添一个成员，需指定该成员的score。
-	 * 如果缓存不存在则创建这个缓存，并指定缓存超时时间；如果缓存存在，则超时时间不会被更新
+	 * 如果缓存不存在则创建这个缓存，并指定缓存超时时间(秒)；如果缓存存在，则超时时间不会被更新
 	 * 如果超时时间小于等于0，则为永久缓存
 	 * @param cacheKey
 	 * @param seconds
