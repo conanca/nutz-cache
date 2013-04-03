@@ -13,11 +13,6 @@ import com.dolplay.nutzcache.annotation.CacheKeySuffix;
 import com.dolplay.nutzcache.assets.CacheKeyPrefix;
 import com.dolplay.nutzcache.assets.domain.User;
 
-/**
- * @author Conanca
- * 用户增删改查等操作的Service类
- * 演示使用缓存的一个示例
- */
 @IocBean(args = { "refer:dao" })
 public class UserService extends IdEntityService<User> {
 
