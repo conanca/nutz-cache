@@ -5,6 +5,6 @@ public class CacheKeyPrefix {
 	public static final String TEST_CACHE_ALLUSERS_INPAGE = "test:cache:allusers:pager";
 	public static final String TEST_CACHE_USER = "test:cache:user";
 	public static final String TEST_CACHE_COUNTUSER = "test:cache:countuser";
-	public static final String SYSTEM_ALLUSERS_IDLIST = "cache:system:allusersidlist";
-	public static final String SYSTEM_OLDUSERS_IDLIST = "cache:system:oldusersidlist";
+	public static final String TEST_CACHE_ALLUSERS_IDLIST = "test:cache:allusersidlist";
+	public static final String TEST_CACHE_NEWUSERS_IDLIST = "test:cache:newusersidlist";
 }
