@@ -2,6 +2,8 @@ package com.dolplay.nutzcache.interceptor;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.util.List;
 
 import org.nutz.aop.InterceptorChain;
 import org.nutz.aop.MethodInterceptor;
@@ -106,7 +108,15 @@ public class CacheInterceptor implements MethodInterceptor {
 		}
 		// 若缓存值不为空，则该方法直接返回缓存里相应的值
 		if (cacheValue != null) {
-			chain.setReturnValue(JSON.parseObject(cacheValue, method.getReturnType()));
+			Class<?> returnType = method.getReturnType();
+			Object returnValue = null;
+			if (returnType.isAssignableFrom(List.class)) {
+				returnValue = JSON.parseArray(cacheValue,
+						(Class<?>) ((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0]);
+			} else {
+				returnValue = JSON.parseObject(cacheValue, returnType);
+			}
+			chain.setReturnValue(returnValue);
 			logger.debug("Get a value from this cache");
 			return;
 		} else {
