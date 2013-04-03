@@ -6,18 +6,17 @@ import java.util.List;
 
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
-import org.nutz.dao.pager.Pager;
 import org.nutz.ioc.aop.Aop;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dolplay.nutzcache.CStrings;
-import com.dolplay.nutzcache.CacheKeyPrefix;
 import com.dolplay.nutzcache.CacheType;
 import com.dolplay.nutzcache.Order;
 import com.dolplay.nutzcache.annotation.Cache;
 import com.dolplay.nutzcache.annotation.CacheKeySuffix;
+import com.dolplay.nutzcache.assets.CacheKeyPrefix;
 import com.dolplay.nutzcache.assets.domain.User;
 import com.dolplay.nutzcache.dao.AdvancedCacheDao;
 import com.dolplay.nutzcache.service.AdvancedCacheIdEntityService;
@@ -38,18 +37,6 @@ public class UserAdvancedService extends AdvancedCacheIdEntityService<User> {
 	}
 
 	/**
-	 * 查询全部用户返回一个列表
-	 * 指定了缓存名为cache:system:allusers(先取相应缓存的值,如果有值则直接返回该值不执行本方法,没有值则执行该方法并设置缓存)
-	 * 注: 方法必须有返回值,该值对应上述缓存的value
-	 * @return
-	 */
-	@Aop("advancedCacheInterceptor")
-	@Cache(cacheKeyPrefix = CacheKeyPrefix.SYSTEM_ALLUSERS)
-	public List<User> list() {
-		return query(null, null);
-	}
-
-	/**
 	 * 查询指定id的用户
 	 * 指定了缓存名的前缀为cache:system:user,后缀为用户id(先取相应缓存的值,如果有值则直接返回该值不执行本方法,没有值则执行该方法并设置缓存)
 	 * 注: 方法必须有返回值,该值对应上述缓存的value
@@ -57,21 +44,9 @@ public class UserAdvancedService extends AdvancedCacheIdEntityService<User> {
 	 * @return
 	 */
 	@Aop("advancedCacheInterceptor")
-	@Cache(cacheKeyPrefix = CacheKeyPrefix.SYSTEM_USER)
+	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_USER)
 	public User view(@CacheKeySuffix int id) {
 		return fetch(id);
-	}
-
-	/**
-	 * 查询指定分页的用户列表
-	 * 其中形参pager会被转为json字符串作为缓存名后缀
-	 * @param pager
-	 * @return
-	 */
-	@Aop("advancedCacheInterceptor")
-	@Cache(cacheKeyPrefix = CacheKeyPrefix.SYSTEM_ALLUSERS_INPAGE)
-	public List<User> listInPage(@CacheKeySuffix Pager pager) {
-		return query(null, pager);
 	}
 
 	/**
@@ -93,8 +68,8 @@ public class UserAdvancedService extends AdvancedCacheIdEntityService<User> {
 	public void update(int id, User user) throws Exception {
 		dao().update(user);
 		// 立即更新缓存
-		logger.debug("立即更新缓存:" + CStrings.cacheKey(CacheKeyPrefix.SYSTEM_USER, id));
-		cacheDao().set(CStrings.cacheKey(CacheKeyPrefix.SYSTEM_USER, id), user);
+		logger.debug("立即更新缓存:" + CStrings.cacheKey(CacheKeyPrefix.TEST_CACHE_USER, id));
+		cacheDao().set(CStrings.cacheKey(CacheKeyPrefix.TEST_CACHE_USER, id), user);
 	}
 
 	/**
@@ -105,15 +80,7 @@ public class UserAdvancedService extends AdvancedCacheIdEntityService<User> {
 	public void remove(int id) throws Exception {
 		delete(id);
 		// 立即删除缓存
-		cacheDao().remove(CStrings.cacheKey(CacheKeyPrefix.SYSTEM_USER, id));
-	}
-
-	/**
-	 * 手动删除全部用户列表缓存
-	 * @throws Exception 
-	 */
-	public void delAllUsersCache() throws Exception {
-		cacheDao().remove(CacheKeyPrefix.SYSTEM_ALLUSERS);
+		cacheDao().remove(CStrings.cacheKey(CacheKeyPrefix.TEST_CACHE_USER, id));
 	}
 
 	/**

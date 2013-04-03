@@ -63,7 +63,7 @@ public class AdvancedCacheDaoTest {
 		cacheDao.zAdd("test:listCba", 300, 3, "333");
 		cacheDao.zAdd("test:listCba", 300, 6, "444");
 		cacheDao.zAdd("test:listCba", 300, 7, "555");
-		assertTrue(300L >= jedis.ttl("test:listCba"));
+		assertTrue(jedis.ttl("test:listCba") <= 300 && jedis.ttl("test:listCba") > 290);
 		Set<String> actual = jedis.zrange("test:listCba", 0, -1);
 		Set<String> expected = new HashSet<String>();
 		expected.add("111");

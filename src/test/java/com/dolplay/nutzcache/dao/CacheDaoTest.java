@@ -80,7 +80,7 @@ public class CacheDaoTest {
 	public void testSetTimeout() throws Exception {
 		cacheDao.set("test:testSetTimeout:name", 300, "testSetTimeout");
 		assertTrue(jedis.exists("test:testSet:name"));
-		assertTrue(300L == jedis.ttl("test:testSetTimeout:name"));
+		assertTrue(jedis.ttl("test:testSetTimeout:name") <= 300 && jedis.ttl("test:testSetTimeout:name") > 290);
 	}
 
 	@Test

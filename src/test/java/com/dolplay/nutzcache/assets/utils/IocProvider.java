@@ -19,7 +19,7 @@ public class IocProvider {
 	public static void init() {
 		try {
 			ioc = new NutIoc(new ComboIocLoader("*org.nutz.ioc.loader.json.JsonLoader", "nutzcacheioc.js", "dao.js",
-					"*org.nutz.ioc.loader.annotation.AnnotationIocLoader", "com.dolplay.nutzcache.test.service"));
+					"*org.nutz.ioc.loader.annotation.AnnotationIocLoader", "com.dolplay.nutzcache"));
 		} catch (ClassNotFoundException e) {
 			logger.error("Ioc create error", e);
 		}
