@@ -1,9 +1,13 @@
 package com.dolplay.nutzcache.assets.service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.nutz.dao.Dao;
+import org.nutz.dao.Sqls;
 import org.nutz.dao.pager.Pager;
+import org.nutz.dao.sql.Sql;
 import org.nutz.ioc.aop.Aop;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.service.IdEntityService;
@@ -42,6 +46,20 @@ public class UserService extends IdEntityService<User> {
 	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_COUNTUSER, cacheTimeout = 600)
 	public int countUser() {
 		return count();
+	}
+
+	@Aop("cacheInterceptor")
+	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_USERIDS)
+	public Set<Integer> userIds() {
+		Sql sql = Sqls.create("SELECT ID FROM SYSTEM_USER");
+		sql.setCallback(Sqls.callback.ints());
+		dao().execute(sql);
+		int[] idsArray = (int[]) sql.getResult();
+		Set<Integer> idSet = new HashSet<Integer>();
+		for (int id : idsArray) {
+			idSet.add(id);
+		}
+		return idSet;
 	}
 
 	/**

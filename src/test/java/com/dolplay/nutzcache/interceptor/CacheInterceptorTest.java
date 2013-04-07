@@ -3,6 +3,7 @@ package com.dolplay.nutzcache.interceptor;
 import static org.junit.Assert.*;
 
 import java.util.List;
+import java.util.Set;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -61,20 +62,20 @@ public class CacheInterceptorTest {
 	@Test
 	public void testSimple() {
 		User user1 = userService.viewReferenceUser();
-		logger.debug("第一次查询用户结果：" + Json.toJson(user1));
+		logger.debug("第一次查询结果：" + Json.toJson(user1));
 		assertTrue(jedis.exists(CacheKeyPrefix.TEST_CACHE_REFERENCEUSER));
 		User user2 = userService.viewReferenceUser();
-		logger.debug("第二次查询用户结果：" + Json.toJson(user2));
+		logger.debug("第二次查询结果：" + Json.toJson(user2));
 		assertEquals(user1, user2);
 	}
 
 	@Test
 	public void testCacheKeySuffix() {
 		User user1 = userService.view(3);
-		logger.debug("第一次查询用户结果：" + Json.toJson(user1));
+		logger.debug("第一次查询结果：" + Json.toJson(user1));
 		assertTrue(jedis.exists(CacheKeyPrefix.TEST_CACHE_USER + ":" + 3));
 		User user2 = userService.view(3);
-		logger.debug("第二次查询用户结果：" + Json.toJson(user2));
+		logger.debug("第二次查询结果：" + Json.toJson(user2));
 		assertEquals(user1, user2);
 	}
 
@@ -85,13 +86,13 @@ public class CacheInterceptorTest {
 		pager.setPageSize(5);
 		pager.setRecordCount(0);
 		List<User> userList1 = userService.listInPage(pager);
-		logger.debug("第一次查询用户结果：" + Json.toJson(userList1));
+		logger.debug("第一次查询结果：" + Json.toJson(userList1));
 		String key = CacheKeyPrefix.TEST_CACHE_ALLUSERS_INPAGE + ":"
 				+ JSON.toJSONString(pager, SerializerFeature.UseSingleQuotes);
 		logger.debug(key);
 		assertTrue(jedis.exists(key));
 		List<User> userList2 = userService.listInPage(pager);
-		logger.debug("第二次查询用户结果：" + Json.toJson(userList2));
+		logger.debug("第二次查询结果：" + Json.toJson(userList2));
 		assertEquals(userList1, userList2);
 	}
 
@@ -102,5 +103,14 @@ public class CacheInterceptorTest {
 		assertTrue(ttl <= 600 && ttl > 590);
 		int count2 = userService.countUser();
 		assertEquals(count1, count2);
+	}
+
+	@Test
+	public void testReturnSet() {
+		Set<Integer> userIds1 = userService.userIds();
+		logger.debug("第一次查询结果：" + Json.toJson(userIds1));
+		Set<Integer> userIds2 = userService.userIds();
+		logger.debug("第二次查询结果：" + Json.toJson(userIds2));
+		assertEquals(userIds1, userIds2);
 	}
 }
