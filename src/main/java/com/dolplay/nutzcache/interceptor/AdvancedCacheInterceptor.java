@@ -10,10 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dolplay.nutzcache.CacheConfig;
-import com.dolplay.nutzcache.CacheType;
-import com.dolplay.nutzcache.Order;
 import com.dolplay.nutzcache.annotation.Cache;
 import com.dolplay.nutzcache.dao.AdvancedCacheDao;
+import com.dolplay.nutzcache.type.CacheType;
+import com.dolplay.nutzcache.type.Order;
 
 /**
  * @author Conanca

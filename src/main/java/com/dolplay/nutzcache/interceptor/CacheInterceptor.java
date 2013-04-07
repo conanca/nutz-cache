@@ -13,11 +13,11 @@ import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.dolplay.nutzcache.CStrings;
 import com.dolplay.nutzcache.CacheConfig;
 import com.dolplay.nutzcache.annotation.Cache;
 import com.dolplay.nutzcache.annotation.CacheKeySuffix;
 import com.dolplay.nutzcache.dao.CacheDao;
+import com.dolplay.nutzcache.lang.CStrings;
 
 /**
  * @author Conanca

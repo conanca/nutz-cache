@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import com.dolplay.nutzcache.CacheConfig;
-import com.dolplay.nutzcache.CacheType;
+import com.dolplay.nutzcache.type.CacheType;
 
 /**
  * @author Conanca

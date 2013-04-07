@@ -2,7 +2,7 @@ package com.dolplay.nutzcache.dao;
 
 import java.util.List;
 
-import com.dolplay.nutzcache.Order;
+import com.dolplay.nutzcache.type.Order;
 
 /**
  * 高级缓存DAO，可操作有序集缓存(注意：有序集缓存都是永久缓存)

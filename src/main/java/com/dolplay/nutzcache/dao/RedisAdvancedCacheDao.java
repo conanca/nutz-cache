@@ -10,7 +10,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import com.dolplay.nutzcache.CacheConfig;
-import com.dolplay.nutzcache.Order;
+import com.dolplay.nutzcache.type.Order;
 
 /**
  * Redis实现的高级缓存DAO

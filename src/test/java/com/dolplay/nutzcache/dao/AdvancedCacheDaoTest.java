@@ -20,9 +20,9 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-import com.dolplay.nutzcache.Order;
 import com.dolplay.nutzcache.assets.domain.User;
 import com.dolplay.nutzcache.assets.utils.IocProvider;
+import com.dolplay.nutzcache.type.Order;
 
 public class AdvancedCacheDaoTest {
 	private static Logger logger = LoggerFactory.getLogger(AdvancedCacheDaoTest.class);

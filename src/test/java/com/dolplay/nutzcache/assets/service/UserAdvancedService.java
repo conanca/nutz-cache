@@ -11,11 +11,11 @@ import org.nutz.ioc.aop.Aop;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.service.IdEntityService;
 
-import com.dolplay.nutzcache.CacheType;
 import com.dolplay.nutzcache.annotation.Cache;
 import com.dolplay.nutzcache.annotation.CacheKeySuffix;
 import com.dolplay.nutzcache.assets.CacheKeyPrefix;
 import com.dolplay.nutzcache.assets.domain.User;
+import com.dolplay.nutzcache.type.CacheType;
 
 @IocBean(args = { "refer:dao" })
 public class UserAdvancedService extends IdEntityService<User> {

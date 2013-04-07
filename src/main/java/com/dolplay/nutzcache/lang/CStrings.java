@@ -1,4 +1,6 @@
-package com.dolplay.nutzcache;
+package com.dolplay.nutzcache.lang;
+
+import com.dolplay.nutzcache.CacheConfig;
 
 /**
  * 缓存相关的字符串操作的帮助类

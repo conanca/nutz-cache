@@ -1,4 +1,4 @@
-package com.dolplay.nutzcache;
+package com.dolplay.nutzcache.type;
 
 public enum CacheType {
 
