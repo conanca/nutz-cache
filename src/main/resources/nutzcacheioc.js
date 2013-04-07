@@ -5,7 +5,7 @@ var ioc = {
 		type : "org.nutz.ioc.impl.PropertiesProxy",
 		args : [false],
 		fields : {
-			paths : [ "nutzcacheconf.properties" ]
+			paths : [ "cache.properties" ]
 		}
 	},
 	
