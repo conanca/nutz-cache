@@ -31,7 +31,7 @@ public class UserAdvancedService extends IdEntityService<User> {
 	 * @return
 	 */
 	@Aop("advancedCacheInterceptor")
-	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_ALLUSERS_IDLIST, cacheType = CacheType.List)
+	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_ALLUSERS_IDLIST, cacheType = CacheType.Sorted)
 	public List<String> listIdByGender(@CacheKeySuffix String gender) {
 		List<User> userList = query(Cnd.where("gender", "=", gender).desc("birthday"), null);
 		List<String> idList = new ArrayList<String>();
@@ -42,7 +42,7 @@ public class UserAdvancedService extends IdEntityService<User> {
 	}
 
 	@Aop("advancedCacheInterceptor")
-	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_NEWUSERS_IDLIST, cacheType = CacheType.List, reverse = true)
+	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_NEWUSERS_IDLIST, cacheType = CacheType.Sorted, reverse = true)
 	public List<String> listNewUsers() throws ParseException {
 		List<User> userList = query(Cnd.where("birthday", ">", new SimpleDateFormat("yyyy-MM-dd").parse("2008-01-01"))
 				.desc("id"), null);

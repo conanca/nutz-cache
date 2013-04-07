@@ -31,9 +31,9 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 	protected void cacheReturn(String cacheKey, InterceptorChain chain, Method method, Cache cacheAn) throws Throwable {
 		// 获取缓存类型，根据缓存类型不同分别对缓存有不同的操作方式
 		CacheType cacheType = cacheAn.cacheType();
-		if (cacheType.equals(CacheType.String)) {
+		if (cacheType.equals(CacheType.Common)) {
 			super.cacheReturn(cacheKey, chain, method, cacheAn);
-		} else if (cacheType.equals(CacheType.List)) {
+		} else if (cacheType.equals(CacheType.Sorted)) {
 			// 获取该方法欲读取的缓存的 VALUE
 			List<String> cacheValue = null;
 			try {

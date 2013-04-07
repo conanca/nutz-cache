@@ -26,10 +26,10 @@ public @interface Cache {
 	public String cacheKeyPrefix() default "";
 
 	/**
-	 * 指明缓存类型。根据类型不同，可缓存字符串(任何对象均可被缓存，都将被转为JSON格式的字符串)值和有序集合值
+	 * 指明缓存类型。根据类型不同，可缓存普通类型的(任何对象均可被缓存，都将被转为JSON格式的字符串)值和有序集合值
 	 * @return
 	 */
-	public CacheType cacheType() default CacheType.String;
+	public CacheType cacheType() default CacheType.Common;
 
 	/**
 	 * 指明缓存超时时间(秒)，超过这个时间该缓存将被删除。如果超时时间小于等于0，则为永久缓存。

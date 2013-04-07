@@ -3,13 +3,13 @@ package com.dolplay.nutzcache.type;
 public enum CacheType {
 
 	/**
-	 * 字符串(任何对象均可被缓存，都将被转为JSON格式的字符串)值
+	 * 普通类型的缓存
 	 */
-	String,
+	Common,
 
 	/**
-	 * 有序集合值，请参考Redis的数据结构 : sorted set
+	 * 有序集类型的缓存，请参考Redis的数据结构 : sorted set
 	 */
-	List
+	Sorted
 
 }
