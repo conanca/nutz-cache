@@ -7,5 +7,6 @@ public class CacheKeyPrefix {
 	public static final String TEST_CACHE_COUNTUSER = "test:cache:countuser";
 	public static final String TEST_CACHE_USERIDS = "test:cache:userids";
 	public static final String TEST_CACHE_ALLUSERS_IDLIST = "test:cache:allusersidlist";
+	public static final String TEST_CACHE_ALLUSERS_LIST = "test:cache:allusers_list";
 	public static final String TEST_CACHE_NEWUSERS_IDLIST = "test:cache:newusersidlist";
 }

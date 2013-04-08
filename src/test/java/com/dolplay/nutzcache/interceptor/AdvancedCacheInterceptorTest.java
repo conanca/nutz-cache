@@ -81,6 +81,15 @@ public class AdvancedCacheInterceptorTest {
 	}
 
 	@Test
+	public void testObjList() {
+		List<User> userList1 = userService.listByGender("male");
+		logger.debug("第一次查询用户结果：" + Json.toJson(userList1));
+		List<User> userList2 = userService.listByGender("male");
+		logger.debug("第二次查询用户结果：" + Json.toJson(userList2));
+		assertEquals(userList1, userList2);
+	}
+
+	@Test
 	public void testReverse() throws Exception {
 		List<String> ids1 = userService.listNewUsers();
 		logger.debug("第一次查询用户结果：" + Json.toJson(ids1));
