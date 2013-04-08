@@ -41,9 +41,9 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 					.getActualTypeArguments()[0];
 			try {
 				if (cacheAn.reverse()) {
-					cacheValue = cacheDao().zQueryByRank(cacheKey, 0, -1, Order.Desc, returnListItemType);
+					cacheValue = cacheDao().zQueryAll(cacheKey, Order.Desc, returnListItemType);
 				} else {
-					cacheValue = cacheDao().zQueryByRank(cacheKey, 0, -1, Order.Asc, returnListItemType);
+					cacheValue = cacheDao().zQueryAll(cacheKey, Order.Asc, returnListItemType);
 				}
 			} catch (Exception e) {
 				logger.error("Read Cache error", e);
