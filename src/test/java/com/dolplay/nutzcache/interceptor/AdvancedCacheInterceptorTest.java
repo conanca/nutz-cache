@@ -13,13 +13,13 @@ import org.nutz.dao.Dao;
 import org.nutz.dao.impl.FileSqlManager;
 import org.nutz.dao.sql.Sql;
 import org.nutz.ioc.Ioc;
-import org.nutz.json.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import com.alibaba.fastjson.JSON;
 import com.dolplay.nutzcache.assets.CacheKeyPrefix;
 import com.dolplay.nutzcache.assets.domain.User;
 import com.dolplay.nutzcache.assets.service.UserAdvancedService;
@@ -62,9 +62,9 @@ public class AdvancedCacheInterceptorTest {
 	@Test
 	public void testSimple() throws ParseException {
 		List<Integer> ids1 = userService.listIdByGender("male");
-		logger.debug("第一次查询用户结果：" + Json.toJson(ids1));
+		logger.debug("第一次查询用户结果：" + JSON.toJSONString(ids1));
 		List<Integer> ids2 = userService.listIdByGender("male");
-		logger.debug("第二次查询用户结果：" + Json.toJson(ids2));
+		logger.debug("第二次查询用户结果：" + JSON.toJSONString(ids2));
 		assertEquals(ids1, ids2);
 		User user = new User();
 		user.setName("testuser");
@@ -74,27 +74,27 @@ public class AdvancedCacheInterceptorTest {
 		userService.dao().insert(user);
 		jedis.del(CacheKeyPrefix.TEST_CACHE_ALLUSERS_IDLIST + ":male");
 		List<Integer> ids3 = userService.listIdByGender("male");
-		logger.debug("第三次查询用户结果：" + Json.toJson(ids3));
+		logger.debug("第三次查询用户结果：" + JSON.toJSONString(ids3));
 		List<Integer> ids4 = userService.listIdByGender("male");
-		logger.debug("第四次查询用户结果：" + Json.toJson(ids4));
+		logger.debug("第四次查询用户结果：" + JSON.toJSONString(ids4));
 		assertEquals(ids3, ids4);
 	}
 
 	@Test
 	public void testObjList() {
 		List<User> userList1 = userService.listByGender("male");
-		logger.debug("第一次查询用户结果：" + Json.toJson(userList1));
+		logger.debug("第一次查询用户结果：" + JSON.toJSONString(userList1));
 		List<User> userList2 = userService.listByGender("male");
-		logger.debug("第二次查询用户结果：" + Json.toJson(userList2));
+		logger.debug("第二次查询用户结果：" + JSON.toJSONString(userList2));
 		assertEquals(userList1, userList2);
 	}
 
 	@Test
 	public void testReverse() throws Exception {
 		List<String> ids1 = userService.listNewUsers();
-		logger.debug("第一次查询用户结果：" + Json.toJson(ids1));
+		logger.debug("第一次查询用户结果：" + JSON.toJSONString(ids1));
 		List<String> ids2 = userService.listNewUsers();
-		logger.debug("第二次查询用户结果：" + Json.toJson(ids2));
+		logger.debug("第二次查询用户结果：" + JSON.toJSONString(ids2));
 		User user = new User();
 		user.setName("newtestuser");
 		user.setGender("male");
@@ -105,10 +105,10 @@ public class AdvancedCacheInterceptorTest {
 		cacheDao.zAdd(CacheKeyPrefix.TEST_CACHE_NEWUSERS_IDLIST, System.currentTimeMillis(),
 				String.valueOf(user.getId()));
 		List<String> idsCache = cacheDao.zQueryAll(CacheKeyPrefix.TEST_CACHE_NEWUSERS_IDLIST, Order.Desc);
-		logger.debug("从缓存中获取结果:" + Json.toJson(idsCache));
+		logger.debug("从缓存中获取结果:" + JSON.toJSONString(idsCache));
 		jedis.del(CacheKeyPrefix.TEST_CACHE_NEWUSERS_IDLIST);
 		List<String> ids3 = userService.listNewUsers();
-		logger.debug("第三次查询用户结果：" + Json.toJson(ids3));
+		logger.debug("第三次查询用户结果：" + JSON.toJSONString(ids3));
 		assertEquals(idsCache, ids3);
 	}
 }
