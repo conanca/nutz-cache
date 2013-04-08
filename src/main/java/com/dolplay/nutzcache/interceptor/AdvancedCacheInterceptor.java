@@ -1,6 +1,7 @@
 package com.dolplay.nutzcache.interceptor;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,12 +36,14 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 			super.cacheReturn(cacheKey, chain, method, cacheAn);
 		} else if (cacheType.equals(CacheType.Sorted)) {
 			// 获取该方法欲读取的缓存的 VALUE
-			List<String> cacheValue = null;
+			List cacheValue = null;
+			Class returnListItemType = (Class<?>) ((ParameterizedType) method.getGenericReturnType())
+					.getActualTypeArguments()[0];
 			try {
 				if (cacheAn.reverse()) {
-					cacheValue = cacheDao().zQueryByRank(cacheKey, 0, -1, Order.Desc);
+					cacheValue = cacheDao().zQueryByRank(cacheKey, 0, -1, Order.Desc, returnListItemType);
 				} else {
-					cacheValue = cacheDao().zQueryByRank(cacheKey, 0, -1, Order.Asc);
+					cacheValue = cacheDao().zQueryByRank(cacheKey, 0, -1, Order.Asc, returnListItemType);
 				}
 			} catch (Exception e) {
 				logger.error("Read Cache error", e);
@@ -56,8 +59,7 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 			// 执行方法
 			chain.doChain();
 			// 获取方法返回值并增加相应缓存
-			@SuppressWarnings("unchecked")
-			List<String> returnObj = (List<String>) chain.getReturn();
+			List returnObj = (List) chain.getReturn();
 			if (returnObj != null) {
 				try {
 					setCache(cacheKey, returnObj, cacheAn.reverse(), cacheAn.cacheTimeout());
@@ -74,8 +76,8 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 		}
 	}
 
-	private void setCache(String cacheKey, List<String> returnObj, boolean reverse, int cacheTimeout) throws Exception {
-		List<String> items = new ArrayList<String>();
+	private void setCache(String cacheKey, List returnObj, boolean reverse, int cacheTimeout) throws Exception {
+		List items = new ArrayList();
 		items.addAll(returnObj);
 		// 如果需要倒序存放入缓存中，则将顺序倒转
 		if (reverse) {
@@ -84,7 +86,7 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 		// 按items的顺序依次插入相应的缓存中
 		long now = System.currentTimeMillis();
 		boolean cacheTimeoutValid = cacheTimeout != CacheConfig.INVALID_TIMEOUT;
-		for (String item : items) {
+		for (Object item : items) {
 			// 如果缓存超时时间设置的有效，则新增缓存时设置该超时时间，否则设置配置文件中所配置的超时时间
 			if (cacheTimeoutValid) {
 				cacheDao().zAdd(cacheKey, cacheTimeout, now++, item);

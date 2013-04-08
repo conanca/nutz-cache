@@ -99,6 +99,81 @@ public interface AdvancedCacheDao extends CacheDao {
 	public List<String> zQueryAll(String cacheKey) throws Exception;
 
 	/**
+	 * 查询有序集缓存，按照区间及排序方式，指定了列表元素类型
+	 * 如：startIndex=0 endIndex=9 order=Order.Desc，按第1条-第10条，然后按倒序返回一个list
+	 *        （查全部的：startIndex=0 endIndex=-1）
+	 * @param cacheKey
+	 * @param startIndex
+	 * @param endIndex
+	 * @param order
+	 * @param itemType
+	 * @return
+	 * @throws Exception
+	 */
+	public <T> List<T> zQueryByRank(String cacheKey, long startIndex, long endIndex, Order order, Class<T> itemType)
+			throws Exception;
+
+	/**
+	 * 查询有序集缓存，按照区间，指定了列表元素类型
+	 * 如：startIndex=0 endIndex=9，取第1条-第10条，返回一个list
+	 *        （查全部的：startIndex=0 endIndex=-1）
+	 * @param cacheKey
+	 * @param startIndex
+	 * @param endIndex
+	 * @param itemType
+	 * @return
+	 * @throws Exception
+	 */
+	public <T> List<T> zQueryByRank(String cacheKey, long startIndex, long endIndex, Class<T> itemType)
+			throws Exception;
+
+	/**
+	 * 查询有序集缓存，按照score值范围及排序方式，指定了列表元素类型
+	 * minScore=1997 maxScore=2013 order=Order.Desc，取score值在1997-2013的，然后按倒序返回一个list
+	 * @param cacheKey
+	 * @param minScore
+	 * @param maxScore
+	 * @param order
+	 * @param itemType
+	 * @return
+	 * @throws Exception
+	 */
+	public <T> List<T> zQueryByScore(String cacheKey, double minScore, double maxScore, Order order, Class<T> itemType)
+			throws Exception;
+
+	/**
+	 * 查询有序集缓存，按照score值范围，指定了列表元素类型
+	 * minScore=1997 maxScore=2013，取score值在1997-2013的，返回一个list
+	 * @param cacheKey
+	 * @param minScore
+	 * @param maxScore
+	 * @param itemType
+	 * @return
+	 * @throws Exception
+	 */
+	public <T> List<T> zQueryByScore(String cacheKey, double minScore, double maxScore, Class<T> itemType)
+			throws Exception;
+
+	/**
+	 * 查询有序集缓存（全部item），按照排序方式，指定了列表元素类型
+	 * @param cacheKey
+	 * @param order
+	 * @param itemType
+	 * @return
+	 * @throws Exception
+	 */
+	public <T> List<T> zQueryAll(String cacheKey, Order order, Class<T> itemType) throws Exception;
+
+	/**
+	 * 查询有序集缓存（全部item），指定了列表元素类型
+	 * @param cacheKey
+	 * @param itemType
+	 * @return
+	 * @throws Exception
+	 */
+	public <T> List<T> zQueryAll(String cacheKey, Class<T> itemType) throws Exception;
+
+	/**
 	 * 删除有序集缓存的一部分成员，按照成员的值
 	 * @param cacheKey
 	 * @param items

@@ -32,11 +32,11 @@ public class UserAdvancedService extends IdEntityService<User> {
 	 */
 	@Aop("advancedCacheInterceptor")
 	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_ALLUSERS_IDLIST, cacheType = CacheType.Sorted)
-	public List<String> listIdByGender(@CacheKeySuffix String gender) {
+	public List<Integer> listIdByGender(@CacheKeySuffix String gender) {
 		List<User> userList = query(Cnd.where("gender", "=", gender).desc("birthday"), null);
-		List<String> idList = new ArrayList<String>();
+		List<Integer> idList = new ArrayList<Integer>();
 		for (User u : userList) {
-			idList.add(String.valueOf(u.getId()));
+			idList.add(u.getId().intValue());
 		}
 		return idList;
 	}

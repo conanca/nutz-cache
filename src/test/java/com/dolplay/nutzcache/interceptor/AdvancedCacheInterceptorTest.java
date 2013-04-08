@@ -61,9 +61,9 @@ public class AdvancedCacheInterceptorTest {
 
 	@Test
 	public void testSimple() throws ParseException {
-		List<String> ids1 = userService.listIdByGender("male");
+		List<Integer> ids1 = userService.listIdByGender("male");
 		logger.debug("第一次查询用户结果：" + Json.toJson(ids1));
-		List<String> ids2 = userService.listIdByGender("male");
+		List<Integer> ids2 = userService.listIdByGender("male");
 		logger.debug("第二次查询用户结果：" + Json.toJson(ids2));
 		assertEquals(ids1, ids2);
 		User user = new User();
@@ -73,9 +73,9 @@ public class AdvancedCacheInterceptorTest {
 		user.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse("2003-01-03"));
 		userService.dao().insert(user);
 		jedis.del(CacheKeyPrefix.TEST_CACHE_ALLUSERS_IDLIST + ":male");
-		List<String> ids3 = userService.listIdByGender("male");
+		List<Integer> ids3 = userService.listIdByGender("male");
 		logger.debug("第三次查询用户结果：" + Json.toJson(ids3));
-		List<String> ids4 = userService.listIdByGender("male");
+		List<Integer> ids4 = userService.listIdByGender("male");
 		logger.debug("第四次查询用户结果：" + Json.toJson(ids4));
 		assertEquals(ids3, ids4);
 	}

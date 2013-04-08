@@ -64,8 +64,7 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 			} else {
 				valueSet = jedis.zrevrange(cacheKey, startIndex, endIndex);
 			}
-			valueList = new ArrayList<String>();
-			valueList.addAll(valueSet);
+			valueList = new ArrayList<String>(valueSet);
 		} catch (Exception e) {
 			throw e;
 		} finally {
@@ -91,8 +90,7 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 			} else {
 				valueSet = jedis.zrevrangeByScore(cacheKey, maxScore, minScore);
 			}
-			valueList = new ArrayList<String>();
-			valueList.addAll(valueSet);
+			valueList = new ArrayList<String>(valueSet);
 		} catch (Exception e) {
 			throw e;
 		} finally {
@@ -113,6 +111,34 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 
 	public List<String> zQueryAll(String cacheKey) throws Exception {
 		return zQueryByRank(cacheKey, 0, -1);
+	}
+
+	public <T> List<T> zQueryByRank(String cacheKey, long startIndex, long endIndex, Order order, Class<T> itemType)
+			throws Exception {
+		return strList2tList(zQueryByRank(cacheKey, startIndex, endIndex, order), itemType);
+	}
+
+	public <T> List<T> zQueryByRank(String cacheKey, long startIndex, long endIndex, Class<T> itemType)
+			throws Exception {
+		return strList2tList(zQueryByRank(cacheKey, startIndex, endIndex), itemType);
+	}
+
+	public <T> List<T> zQueryByScore(String cacheKey, double minScore, double maxScore, Order order, Class<T> itemType)
+			throws Exception {
+		return strList2tList(zQueryByScore(cacheKey, minScore, maxScore, order), itemType);
+	}
+
+	public <T> List<T> zQueryByScore(String cacheKey, double minScore, double maxScore, Class<T> itemType)
+			throws Exception {
+		return strList2tList(zQueryByScore(cacheKey, minScore, maxScore), itemType);
+	}
+
+	public <T> List<T> zQueryAll(String cacheKey, Order order, Class<T> itemType) throws Exception {
+		return strList2tList(zQueryAll(cacheKey, order), itemType);
+	}
+
+	public <T> List<T> zQueryAll(String cacheKey, Class<T> itemType) throws Exception {
+		return strList2tList(zQueryAll(cacheKey), itemType);
 	}
 
 	public void zDel(String cacheKey, String... items) throws Exception {
@@ -155,5 +181,13 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 				jedisPool.returnResource(jedis);
 			}
 		}
+	}
+
+	public <T> List<T> strList2tList(List<String> list, Class<T> itemType) {
+		List<T> newList = new ArrayList<T>();
+		for (String item : list) {
+			newList.add(JSON.parseObject(item, itemType));
+		}
+		return newList;
 	}
 }
