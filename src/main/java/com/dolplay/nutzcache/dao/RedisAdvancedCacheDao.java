@@ -9,6 +9,7 @@ import org.nutz.ioc.impl.PropertiesProxy;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import com.alibaba.fastjson.JSON;
 import com.dolplay.nutzcache.CacheConfig;
 import com.dolplay.nutzcache.type.Order;
 
@@ -23,12 +24,18 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 		super(config, jedisPool);
 	}
 
-	public void zAdd(String cacheKey, int seconds, double score, String item) throws Exception {
+	public void zAdd(String cacheKey, int seconds, double score, Object item) throws Exception {
 		Jedis jedis = null;
 		try {
 			jedis = jedisPool.getResource();
 			boolean isNew = !jedis.exists(cacheKey);
-			jedis.zadd(cacheKey, score, item);
+			String cacheValue = null;
+			if (CharSequence.class.isAssignableFrom(item.getClass())) {
+				cacheValue = item.toString();
+			} else {
+				cacheValue = JSON.toJSONString(item);
+			}
+			jedis.zadd(cacheKey, score, cacheValue);
 			if (isNew && seconds > 0) {
 				jedis.expire(cacheKey, seconds);
 			}
@@ -41,7 +48,7 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 		}
 	}
 
-	public void zAdd(String cacheKey, double score, String item) throws Exception {
+	public void zAdd(String cacheKey, double score, Object item) throws Exception {
 		int timeout = config.getInt("LIST_CACHE_TIMEOUT", CacheConfig.DEFAULT_LIST_CACHE_TIMEOUT);
 		zAdd(cacheKey, timeout, score, item);
 	}

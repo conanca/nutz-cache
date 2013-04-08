@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import com.alibaba.fastjson.JSON;
 import com.dolplay.nutzcache.assets.domain.User;
 import com.dolplay.nutzcache.assets.utils.IocProvider;
 import com.dolplay.nutzcache.type.Order;
@@ -77,11 +78,11 @@ public class AdvancedCacheDaoTest {
 
 	@Test
 	public void testZAddStringDoubleString() throws Exception {
-		cacheDao.zAdd("test:listAbc", 1, "111");
-		cacheDao.zAdd("test:listAbc", 2, "222");
-		cacheDao.zAdd("test:listAbc", 3, "333");
-		cacheDao.zAdd("test:listAbc", 6, "444");
-		cacheDao.zAdd("test:listAbc", 7, "555");
+		cacheDao.zAdd("test:listAbc", 1, 111);
+		cacheDao.zAdd("test:listAbc", 2, 222);
+		cacheDao.zAdd("test:listAbc", 3, 333);
+		cacheDao.zAdd("test:listAbc", 6, 444);
+		cacheDao.zAdd("test:listAbc", 7, 555);
 		Set<String> actual = jedis.zrange("test:listAbc", 0, -1);
 		Set<String> expected = new HashSet<String>();
 		expected.add("111");
@@ -90,6 +91,22 @@ public class AdvancedCacheDaoTest {
 		expected.add("444");
 		expected.add("555");
 		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testZaddObject() throws Exception {
+		Ioc ioc = IocProvider.ioc();
+		Dao dao = ioc.get(Dao.class, "dao");
+		List<User> users = dao.query(User.class, null);
+		Set<String> expected = new HashSet<String>();
+		int i = 114;
+		for (User user : users) {
+			cacheDao.zAdd("test:listObj", i++, user);
+			expected.add(JSON.toJSONString(user));
+		}
+		Set<String> actual = jedis.zrange("test:listObj", 0, -1);
+		assertEquals(expected, actual);
+
 	}
 
 	@Test

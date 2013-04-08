@@ -21,7 +21,7 @@ public interface AdvancedCacheDao extends CacheDao {
 	 * @param item
 	 * @throws Exception
 	 */
-	public void zAdd(String cacheKey, int seconds, double score, String item) throws Exception;
+	public void zAdd(String cacheKey, int seconds, double score, Object item) throws Exception;
 
 	/**
 	 * 为有序集缓存的值增添一个成员，需指定该成员的score
@@ -31,7 +31,7 @@ public interface AdvancedCacheDao extends CacheDao {
 	 * @param item
 	 * @throws Exception
 	 */
-	public void zAdd(String cacheKey, double score, String item) throws Exception;
+	public void zAdd(String cacheKey, double score, Object item) throws Exception;
 
 	/**
 	 * 查询有序集缓存，按照区间及排序方式
