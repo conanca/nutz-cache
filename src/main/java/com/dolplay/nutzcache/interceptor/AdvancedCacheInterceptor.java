@@ -36,8 +36,8 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 			super.cacheReturn(cacheKey, chain, method, cacheAn);
 		} else if (cacheType.equals(CacheType.Sorted)) {
 			// 获取该方法欲读取的缓存的 VALUE
-			List cacheValue = null;
-			Class returnListItemType = (Class<?>) ((ParameterizedType) method.getGenericReturnType())
+			List<?> cacheValue = null;
+			Class<?> returnListItemType = (Class<?>) ((ParameterizedType) method.getGenericReturnType())
 					.getActualTypeArguments()[0];
 			try {
 				if (cacheAn.reverse()) {
@@ -59,7 +59,7 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 			// 执行方法
 			chain.doChain();
 			// 获取方法返回值并增加相应缓存
-			List returnObj = (List) chain.getReturn();
+			List<?> returnObj = (List<?>) chain.getReturn();
 			if (returnObj != null) {
 				try {
 					setCache(cacheKey, returnObj, cacheAn.reverse(), cacheAn.cacheTimeout());
@@ -76,9 +76,9 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 		}
 	}
 
-	private void setCache(String cacheKey, List returnObj, boolean reverse, int cacheTimeout) throws Exception {
-		List items = new ArrayList();
-		items.addAll(returnObj);
+	private void setCache(String cacheKey, List<?> returnObj, boolean reverse, int cacheTimeout) throws Exception {
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		List<?> items = new ArrayList(returnObj);
 		// 如果需要倒序存放入缓存中，则将顺序倒转
 		if (reverse) {
 			Collections.reverse(items);
