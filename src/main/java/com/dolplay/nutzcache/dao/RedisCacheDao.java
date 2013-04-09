@@ -132,4 +132,18 @@ public class RedisCacheDao implements CacheDao {
 		return keySet;
 	}
 
+	public String keyType(String key) throws Exception {
+		Jedis jedis = null;
+		String keyType = null;
+		try {
+			jedis = jedisPool.getResource();
+			keyType = jedis.type(key);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			if (jedis != null)
+				jedisPool.returnResource(jedis);
+		}
+		return keyType;
+	}
 }

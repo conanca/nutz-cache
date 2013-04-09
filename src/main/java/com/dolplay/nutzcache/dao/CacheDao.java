@@ -75,4 +75,12 @@ public interface CacheDao {
 	 * @return
 	 */
 	public Set<String> keySet(String pattern) throws Exception;
+
+	/**
+	 * 返回 key 所储存的值的类型
+	 * @param key
+	 * @return
+	 * @throws Exception
+	 */
+	public String keyType(String key) throws Exception;
 }
