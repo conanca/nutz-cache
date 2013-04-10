@@ -12,11 +12,11 @@ var ioc = {
 	jedisPoolConfig : {
 		type : 'redis.clients.jedis.JedisPoolConfig',
 		fields : {
-			maxActive : { java : "$cacheProp.getInt('pool-maxActive')" },
-			maxIdle : { java : "$cacheProp.getInt('pool-maxIdle')" },
-			maxWait : { java : "$cacheProp.getInt('pool-maxWait')" },
-			testOnBorrow : { java : "$cacheProp.get('pool-testOnBorrow')" },
-			testOnReturn : { java : "$cacheProp.get('pool-testOnReturn')" }
+			maxActive : { java : "$cacheProp.getInt('pool-maxActive',1024)" },
+			maxIdle : { java : "$cacheProp.getInt('pool-maxIdle',200)" },
+			maxWait : { java : "$cacheProp.getInt('pool-maxWait',1000)" },
+			testOnBorrow : { java : "$cacheProp.get('pool-testOnBorrow',true)" },
+			testOnReturn : { java : "$cacheProp.get('pool-testOnReturn',true)" }
 		}
 	},
 	
@@ -29,11 +29,11 @@ var ioc = {
 		    {
 				refer : 'jedisPoolConfig'
 			},
-			{ java : "$cacheProp.get('redis-host')" },						// host
-			{ java : "$cacheProp.getInt('redis-port')" },						// port
-			{ java : "$cacheProp.getInt('redis-timeout')" },					// timeout
+			{ java : "$cacheProp.get('redis-host','127.0.0.1')" },						// host
+			{ java : "$cacheProp.getInt('redis-port',6379)" },						// port
+			{ java : "$cacheProp.getInt('redis-timeout',2000)" },					// timeout
 			{ java : "$cacheProp.get('redis-password',null)" },				// password
-			{ java : "$cacheProp.getInt('redis-databaseNumber')" }	// database number
+			{ java : "$cacheProp.getInt('redis-databaseNumber',0)" }	// database number
 		]
 	},
 	
