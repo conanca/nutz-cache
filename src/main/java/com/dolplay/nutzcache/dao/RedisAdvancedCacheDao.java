@@ -20,8 +20,8 @@ import com.dolplay.nutzcache.type.Order;
  */
 public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCacheDao {
 
-	public RedisAdvancedCacheDao(PropertiesProxy config, JedisPool jedisPool) {
-		super(config, jedisPool);
+	public RedisAdvancedCacheDao(PropertiesProxy cacheProp, JedisPool jedisPool) {
+		super(cacheProp, jedisPool);
 	}
 
 	public void zAdd(String cacheKey, int seconds, double score, Object item) throws Exception {
@@ -49,7 +49,7 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 	}
 
 	public void zAdd(String cacheKey, double score, Object item) throws Exception {
-		int timeout = config.getInt("LIST_CACHE_TIMEOUT", CacheConfig.DEFAULT_LIST_CACHE_TIMEOUT);
+		int timeout = cacheProp.getInt("LIST_CACHE_TIMEOUT", CacheConfig.DEFAULT_LIST_CACHE_TIMEOUT);
 		zAdd(cacheKey, timeout, score, item);
 	}
 

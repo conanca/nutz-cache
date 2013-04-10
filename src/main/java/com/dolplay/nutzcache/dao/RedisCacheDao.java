@@ -16,16 +16,16 @@ import com.dolplay.nutzcache.CacheConfig;
  *
  */
 public class RedisCacheDao implements CacheDao {
-	protected PropertiesProxy config;
+	protected PropertiesProxy cacheProp;
 	protected JedisPool jedisPool;
 
-	public RedisCacheDao(PropertiesProxy config, JedisPool jedisPool) {
-		this.config = config;
+	public RedisCacheDao(PropertiesProxy cacheProp, JedisPool jedisPool) {
+		this.cacheProp = cacheProp;
 		this.jedisPool = jedisPool;
 	}
 
 	public void set(String cacheKey, Object cacheValue) throws Exception {
-		int timeout = config.getInt("STANDARD_CACHE_TIMEOUT", CacheConfig.DEFAULT_STANDARD_CACHE_TIMEOUT);
+		int timeout = cacheProp.getInt("STANDARD_CACHE_TIMEOUT", CacheConfig.DEFAULT_STANDARD_CACHE_TIMEOUT);
 		set(cacheKey, timeout, cacheValue);
 	}
 
