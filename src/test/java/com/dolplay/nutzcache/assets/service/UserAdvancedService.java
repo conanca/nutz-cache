@@ -15,6 +15,7 @@ import com.dolplay.nutzcache.annotation.Cache;
 import com.dolplay.nutzcache.annotation.CacheKeySuffix;
 import com.dolplay.nutzcache.assets.CacheKeyPrefix;
 import com.dolplay.nutzcache.assets.domain.User;
+import com.dolplay.nutzcache.interceptor.InterceptorName;
 import com.dolplay.nutzcache.type.CacheType;
 
 @IocBean(args = { "refer:dao" })
@@ -30,7 +31,7 @@ public class UserAdvancedService extends IdEntityService<User> {
 	 * @param gender
 	 * @return
 	 */
-	@Aop("advancedCacheInterceptor")
+	@Aop(InterceptorName.ADVANCEDCACHEINTERCEPTOR)
 	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_ALLUSERS_IDLIST, cacheType = CacheType.zset)
 	public List<Integer> listIdByGender(@CacheKeySuffix String gender) {
 		List<User> userList = query(Cnd.where("gender", "=", gender).desc("birthday"), null);
@@ -41,14 +42,14 @@ public class UserAdvancedService extends IdEntityService<User> {
 		return idList;
 	}
 
-	@Aop("advancedCacheInterceptor")
+	@Aop(InterceptorName.ADVANCEDCACHEINTERCEPTOR)
 	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_ALLUSERS_LIST, cacheType = CacheType.zset)
 	public List<User> listByGender(@CacheKeySuffix String gender) {
 		List<User> userList = query(Cnd.where("gender", "=", gender).desc("birthday"), null);
 		return userList;
 	}
 
-	@Aop("advancedCacheInterceptor")
+	@Aop(InterceptorName.ADVANCEDCACHEINTERCEPTOR)
 	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_NEWUSERS_IDLIST, cacheType = CacheType.zset, reverse = true)
 	public List<String> listNewUsers() throws ParseException {
 		List<User> userList = query(Cnd.where("birthday", ">", new SimpleDateFormat("yyyy-MM-dd").parse("2008-01-01"))

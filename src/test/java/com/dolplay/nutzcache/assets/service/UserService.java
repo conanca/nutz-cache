@@ -16,6 +16,7 @@ import com.dolplay.nutzcache.annotation.Cache;
 import com.dolplay.nutzcache.annotation.CacheKeySuffix;
 import com.dolplay.nutzcache.assets.CacheKeyPrefix;
 import com.dolplay.nutzcache.assets.domain.User;
+import com.dolplay.nutzcache.interceptor.InterceptorName;
 
 @IocBean(args = { "refer:dao" })
 public class UserService extends IdEntityService<User> {
@@ -24,13 +25,13 @@ public class UserService extends IdEntityService<User> {
 		super(dao);
 	}
 
-	@Aop("cacheInterceptor")
+	@Aop(InterceptorName.CACHEINTERCEPTOR)
 	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_REFERENCEUSER)
 	public User viewReferenceUser() {
 		return fetch(1);
 	}
 
-	@Aop("cacheInterceptor")
+	@Aop(InterceptorName.CACHEINTERCEPTOR)
 	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_USER)
 	public User view(@CacheKeySuffix int id) {
 		return fetch(id);
@@ -42,13 +43,13 @@ public class UserService extends IdEntityService<User> {
 		return query(null, pager);
 	}
 
-	@Aop("cacheInterceptor")
+	@Aop(InterceptorName.CACHEINTERCEPTOR)
 	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_COUNTUSER, cacheTimeout = 600)
 	public int countUser() {
 		return count();
 	}
 
-	@Aop("cacheInterceptor")
+	@Aop(InterceptorName.CACHEINTERCEPTOR)
 	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_USERIDS)
 	public Set<Integer> userIds() {
 		Sql sql = Sqls.create("SELECT ID FROM SYSTEM_USER");
