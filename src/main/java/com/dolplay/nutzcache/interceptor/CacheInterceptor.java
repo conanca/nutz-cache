@@ -21,7 +21,7 @@ import com.dolplay.nutzcache.lang.CStrings;
 
 /**
  * @author Conanca
- *  实现缓存预先读取及缓存自动设值的方法拦截器，支持普通类型缓存
+ *  实现缓存预先读取及缓存自动设值的方法拦截器，支持字符串型缓存
  */
 public class CacheInterceptor implements MethodInterceptor {
 	private static Logger logger = LoggerFactory.getLogger(CacheInterceptor.class);

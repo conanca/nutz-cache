@@ -18,7 +18,7 @@ import com.dolplay.nutzcache.type.Order;
 
 /**
  * @author Conanca
- * 实现缓存预先读取及缓存自动设值的方法拦截器，支持普通类型缓存和有序集型缓存
+ * 实现缓存预先读取及缓存自动设值的方法拦截器，支持字符串型缓存和有序集型缓存
  */
 public class AdvancedCacheInterceptor extends CacheInterceptor {
 	private static Logger logger = LoggerFactory.getLogger(AdvancedCacheInterceptor.class);
@@ -32,9 +32,9 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 	protected void cacheReturn(String cacheKey, InterceptorChain chain, Method method, Cache cacheAn) throws Throwable {
 		// 获取缓存类型，根据缓存类型不同分别对缓存有不同的操作方式
 		CacheType cacheType = cacheAn.cacheType();
-		if (cacheType.equals(CacheType.Common)) {
+		if (cacheType.equals(CacheType.string)) {
 			super.cacheReturn(cacheKey, chain, method, cacheAn);
-		} else if (cacheType.equals(CacheType.Sorted)) {
+		} else if (cacheType.equals(CacheType.zset)) {
 			// 获取该方法欲读取的缓存的 VALUE
 			List<?> cacheValue = null;
 			Class<?> returnListItemType = (Class<?>) ((ParameterizedType) method.getGenericReturnType())

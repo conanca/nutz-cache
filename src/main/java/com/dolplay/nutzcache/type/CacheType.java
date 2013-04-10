@@ -1,15 +1,19 @@
 package com.dolplay.nutzcache.type;
 
+/**
+ * 在缓存中存储值的类型，均属于redis的数据类型
+ * @author conanca
+ */
 public enum CacheType {
 
 	/**
-	 * 普通类型的缓存
+	 * 字符串
 	 */
-	Common,
+	string,
 
 	/**
-	 * 有序集类型的缓存，请参考Redis的数据结构 : sorted set
+	 * 有序集，请参考Redis的数据结构 : sorted set
 	 */
-	Sorted
+	zset
 
 }

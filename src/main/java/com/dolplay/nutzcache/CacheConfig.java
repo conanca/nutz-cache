@@ -8,7 +8,7 @@ public class CacheConfig {
 	public static final String CACHEKEY_DELIMITER = ":";
 
 	/**
-	 * 默认的普通类型缓存的超时时间，单位为秒
+	 * 默认的字符串型缓存的超时时间，单位为秒
 	 */
 	public static final int DEFAULT_STANDARD_CACHE_TIMEOUT = 600;
 

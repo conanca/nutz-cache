@@ -26,10 +26,10 @@ public @interface Cache {
 	public String cacheKeyPrefix() default "";
 
 	/**
-	 * 指明缓存类型。根据类型不同，可缓存普通类型的(任何对象均可被缓存，都将被转为JSON格式的字符串)值和有序集合值
+	 * 指明在缓存中存储值的类型，均属于redis的数据类型
 	 * @return
 	 */
-	public CacheType cacheType() default CacheType.Common;
+	public CacheType cacheType() default CacheType.string;
 
 	/**
 	 * 指明缓存超时时间(秒)，超过这个时间该缓存将被删除。如果超时时间小于等于0，则为永久缓存。
@@ -39,7 +39,7 @@ public @interface Cache {
 	public int cacheTimeout() default CacheConfig.INVALID_TIMEOUT;
 
 	/**
-	 * 指明CacheType为List类型时，往缓存中存放有序集时，是否倒转原有顺序。
+	 * 指明CacheType为有序集类型时，往缓存中存放list时，是否倒转原有顺序。
 	 * 缺省不倒转
 	 * @return
 	 */
