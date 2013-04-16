@@ -183,8 +183,12 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> List<T> strList2tList(List<String> list, Class<T> itemType) {
 		List<T> newList = new ArrayList<T>();
+		if (CharSequence.class.isAssignableFrom(itemType)) {
+			return (List<T>) list;
+		}
 		for (String item : list) {
 			newList.add(JSON.parseObject(item, itemType));
 		}
