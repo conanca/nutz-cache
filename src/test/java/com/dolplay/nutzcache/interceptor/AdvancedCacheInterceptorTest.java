@@ -104,11 +104,11 @@ public class AdvancedCacheInterceptorTest {
 		AdvancedCacheDao cacheDao = IocProvider.ioc().get(AdvancedCacheDao.class, "advancedCacheDao");
 		cacheDao.zAdd(CacheKeyPrefix.TEST_CACHE_NEWUSERS_NAMELIST, System.currentTimeMillis(),
 				String.valueOf(user.getName()));
-		List<String> idsCache = cacheDao.zQueryAll(CacheKeyPrefix.TEST_CACHE_NEWUSERS_NAMELIST, Order.Desc);
-		logger.debug("从缓存中获取结果:" + JSON.toJSONString(idsCache));
+		List<String> namesCache = cacheDao.zQueryAll(CacheKeyPrefix.TEST_CACHE_NEWUSERS_NAMELIST, Order.Desc);
+		logger.debug("从缓存中获取结果:" + JSON.toJSONString(namesCache));
 		jedis.del(CacheKeyPrefix.TEST_CACHE_NEWUSERS_NAMELIST);
 		List<String> names3 = userService.listNewUsers();
 		logger.debug("第三次查询用户结果：" + JSON.toJSONString(names3));
-		assertEquals(idsCache, names3);
+		assertEquals(namesCache, names3);
 	}
 }
