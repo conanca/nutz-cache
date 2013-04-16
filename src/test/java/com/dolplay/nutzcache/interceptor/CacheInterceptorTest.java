@@ -69,6 +69,16 @@ public class CacheInterceptorTest {
 	}
 
 	@Test
+	public void testSimple2() {
+		String user1 = userService.viewReferenceUserName();
+		logger.debug("第一次查询结果：" + user1);
+		assertTrue(jedis.exists(CacheKeyPrefix.TEST_CACHE_REFERENCEUSERNAME));
+		String user2 = userService.viewReferenceUserName();
+		logger.debug("第二次查询结果：" + user2);
+		assertEquals(user1, user2);
+	}
+
+	@Test
 	public void testCacheKeySuffix() {
 		User user1 = userService.view(3);
 		logger.debug("第一次查询结果：" + JSON.toJSONString(user1));

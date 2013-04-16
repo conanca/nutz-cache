@@ -32,6 +32,12 @@ public class UserService extends IdEntityService<User> {
 	}
 
 	@Aop(InterceptorName.CACHEINTERCEPTOR)
+	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_REFERENCEUSERNAME)
+	public String viewReferenceUserName() {
+		return fetch(1).getName();
+	}
+
+	@Aop(InterceptorName.CACHEINTERCEPTOR)
 	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_USER)
 	public User view(@CacheKeySuffix int id) {
 		return fetch(id);
