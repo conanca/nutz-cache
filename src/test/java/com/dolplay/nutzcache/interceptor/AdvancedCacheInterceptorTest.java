@@ -91,10 +91,10 @@ public class AdvancedCacheInterceptorTest {
 
 	@Test
 	public void testReverse() throws Exception {
-		List<String> ids1 = userService.listNewUsers();
-		logger.debug("第一次查询用户结果：" + JSON.toJSONString(ids1));
-		List<String> ids2 = userService.listNewUsers();
-		logger.debug("第二次查询用户结果：" + JSON.toJSONString(ids2));
+		List<String> names1 = userService.listNewUsers();
+		logger.debug("第一次查询用户结果：" + JSON.toJSONString(names1));
+		List<String> names2 = userService.listNewUsers();
+		logger.debug("第二次查询用户结果：" + JSON.toJSONString(names2));
 		User user = new User();
 		user.setName("newtestuser");
 		user.setGender("male");
@@ -102,13 +102,13 @@ public class AdvancedCacheInterceptorTest {
 		user.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse("2013-04-01"));
 		user = userService.dao().insert(user);
 		AdvancedCacheDao cacheDao = IocProvider.ioc().get(AdvancedCacheDao.class, "advancedCacheDao");
-		cacheDao.zAdd(CacheKeyPrefix.TEST_CACHE_NEWUSERS_IDLIST, System.currentTimeMillis(),
-				String.valueOf(user.getId()));
-		List<String> idsCache = cacheDao.zQueryAll(CacheKeyPrefix.TEST_CACHE_NEWUSERS_IDLIST, Order.Desc);
+		cacheDao.zAdd(CacheKeyPrefix.TEST_CACHE_NEWUSERS_NAMELIST, System.currentTimeMillis(),
+				String.valueOf(user.getName()));
+		List<String> idsCache = cacheDao.zQueryAll(CacheKeyPrefix.TEST_CACHE_NEWUSERS_NAMELIST, Order.Desc);
 		logger.debug("从缓存中获取结果:" + JSON.toJSONString(idsCache));
-		jedis.del(CacheKeyPrefix.TEST_CACHE_NEWUSERS_IDLIST);
-		List<String> ids3 = userService.listNewUsers();
-		logger.debug("第三次查询用户结果：" + JSON.toJSONString(ids3));
-		assertEquals(idsCache, ids3);
+		jedis.del(CacheKeyPrefix.TEST_CACHE_NEWUSERS_NAMELIST);
+		List<String> names3 = userService.listNewUsers();
+		logger.debug("第三次查询用户结果：" + JSON.toJSONString(names3));
+		assertEquals(idsCache, names3);
 	}
 }

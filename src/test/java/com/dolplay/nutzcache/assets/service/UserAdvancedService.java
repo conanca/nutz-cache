@@ -50,13 +50,13 @@ public class UserAdvancedService extends IdEntityService<User> {
 	}
 
 	@Aop(InterceptorName.ADVANCEDCACHEINTERCEPTOR)
-	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_NEWUSERS_IDLIST, cacheType = CacheType.zset, reverse = true)
+	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_NEWUSERS_NAMELIST, cacheType = CacheType.zset, reverse = true)
 	public List<String> listNewUsers() throws ParseException {
 		List<User> userList = query(Cnd.where("birthday", ">", new SimpleDateFormat("yyyy-MM-dd").parse("2008-01-01"))
 				.desc("id"), null);
 		List<String> idList = new ArrayList<String>();
 		for (User u : userList) {
-			idList.add(String.valueOf(u.getId()));
+			idList.add(String.valueOf(u.getName()));
 		}
 		return idList;
 	}
