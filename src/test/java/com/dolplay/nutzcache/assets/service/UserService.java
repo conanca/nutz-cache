@@ -25,36 +25,62 @@ public class UserService extends IdEntityService<User> {
 		super(dao);
 	}
 
+	/**
+	 * 查询参考用户
+	 * @return
+	 */
 	@Aop(InterceptorName.CACHEINTERCEPTOR)
 	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_REFERENCEUSER)
 	public User viewReferenceUser() {
 		return fetch(1);
 	}
 
+	/**
+	 * 查询参考用户的名称
+	 * @return
+	 */
 	@Aop(InterceptorName.CACHEINTERCEPTOR)
 	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_REFERENCEUSERNAME)
 	public String viewReferenceUserName() {
 		return fetch(1).getName();
 	}
 
+	/**
+	 * 根据id查询用户
+	 * @param id
+	 * @return
+	 */
 	@Aop(InterceptorName.CACHEINTERCEPTOR)
 	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_USER)
 	public User view(@CacheKeySuffix int id) {
 		return fetch(id);
 	}
 
+	/**
+	 * 分页查询全部用户列表
+	 * @param pager
+	 * @return
+	 */
 	@Aop("advancedCacheInterceptor")
 	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_ALLUSERS_INPAGE)
 	public List<User> listInPage(@CacheKeySuffix Pager pager) {
 		return query(null, pager);
 	}
 
+	/**
+	 * 统计用户数
+	 * @return
+	 */
 	@Aop(InterceptorName.CACHEINTERCEPTOR)
 	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_COUNTUSER, cacheTimeout = 600)
 	public int countUser() {
 		return count();
 	}
 
+	/**
+	 * 查询全部用户id列表
+	 * @return
+	 */
 	@Aop(InterceptorName.CACHEINTERCEPTOR)
 	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_USERIDS)
 	public Set<Integer> userIds() {
@@ -69,11 +95,6 @@ public class UserService extends IdEntityService<User> {
 		return idSet;
 	}
 
-	/**
-	 * 插入一个用户
-	 * @param user
-	 * @return
-	 */
 	public void insert(User user) {
 		dao().insert(user);
 	}

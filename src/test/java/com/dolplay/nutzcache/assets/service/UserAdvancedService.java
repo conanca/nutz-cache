@@ -26,8 +26,8 @@ public class UserAdvancedService extends IdEntityService<User> {
 	}
 
 	/**
-	 * 根据指定性别查询用户Id列表
-	 * 缓存类型为有序集合
+	 * 根据指定性别查询用户id列表
+	 * 缓存类型为有序集
 	 * @param gender
 	 * @return
 	 */
@@ -42,6 +42,12 @@ public class UserAdvancedService extends IdEntityService<User> {
 		return idList;
 	}
 
+	/**
+	 * 根据指定性别查询用户列表
+	 * 缓存类型为有序集
+	 * @param gender
+	 * @return
+	 */
 	@Aop(InterceptorName.ADVANCEDCACHEINTERCEPTOR)
 	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_ALLUSERS_LIST, cacheType = CacheType.zset)
 	public List<User> listByGender(@CacheKeySuffix String gender) {
@@ -49,6 +55,11 @@ public class UserAdvancedService extends IdEntityService<User> {
 		return userList;
 	}
 
+	/**
+	 * 查询08年以后出生的用户id列表
+	 * @return
+	 * @throws ParseException
+	 */
 	@Aop(InterceptorName.ADVANCEDCACHEINTERCEPTOR)
 	@Cache(cacheKeyPrefix = CacheKeyPrefix.TEST_CACHE_NEWUSERS_NAMELIST, cacheType = CacheType.zset, reverse = true)
 	public List<String> listNewUsers() throws ParseException {
