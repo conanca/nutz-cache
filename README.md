@@ -13,15 +13,15 @@ Usage
 ---------
 1. 在你的nutz应用所配置的ioc加载器中增加一个配置文件“nutzcacheioc.js”，例如：
 
-    @IocBy(type=JsonIocProvider.class, args={"/conf/core.js", "/conf/pet.js", "nutzcacheioc.js"})
+    @IocBy(type=JsonIocProvider.class, args={"/conf/core.js", "/conf/pet.js", "nutzcacheioc.js"})	
     public class MainModule {
-      ...
+    	...
 
 2. 在应用的source forlder下增加一个配置文件cache.properties，内容如下：
 
-    #普通类型缓存有效时间(秒)
+    \#普通类型缓存有效时间(秒)
     STANDARD_CACHE_TIMEOUT=600
-    #有序集缓存有效时间(秒)
+    \#有序集缓存有效时间(秒)
     LIST_CACHE_TIMEOUT=3600
     
     pool-maxActive=1024
@@ -33,12 +33,11 @@ Usage
     redis-host=127.0.0.1
     redis-port=6379
     redis-timeout=2000
-    #redis-password=
-    redis-databaseNumber=0
+    \#redis-password=
 
 3. 在一个函数上使用缓存方法拦截器，并通过Cache注解指明缓存名。例如：
 
-    @IocBean(args = { "refer:dao" })
+    @IocBean(args = { "refer:dao" })	
     public class UserService extends IdEntityService<User> {
     	public UserService(Dao dao) {
     		super(dao);
@@ -47,11 +46,11 @@ Usage
     	/**
     	 * 查询参考用户
     	 */
-    	@Aop(InterceptorName.CACHEINTERCEPTOR)
-    	@Cache(cacheKeyPrefix = "myapptest:cache:ReferenceUser")
+    	@Aop(InterceptorName.CACHEINTERCEPTOR)	
+    	@Cache(cacheKeyPrefix = "myapptest:cache:ReferenceUser")	
     	public User viewReferenceUser() {
     		return fetch(1);
     	}
     ...
 
-4.启动redis服务器，运行上述函数的test case两次，即可观察到缓存其作用了。
+4.启动redis服务器，运行上述函数的test case两次，即可观察到缓存起作用了。
