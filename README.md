@@ -11,13 +11,13 @@ nutz-cache
 
 简单用法
 --------
-1. 在你的nutz应用所配置的ioc加载器中增加一个配置文件“nutzcacheioc.js”，例如：
+1. 在你的nutz应用项目引入nutz-cache.0.1.x.jar，然后在你所配置的ioc加载器中增加一个配置文件“nutzcacheioc.js”，例如：
 
     @IocBy(type=JsonIocProvider.class, args={"/conf/core.js", "/conf/pet.js", "nutzcacheioc.js"})  
     public class MainModule {  
     	...
 
-2. 在应用的source forlder下增加一个配置文件cache.properties，内容如下：
+2. 在你的项目的source forlder下增加一个配置文件cache.properties，内容如下：
 
     \#字符串类型缓存有效时间(秒)  
     DEFAULT_STRING_CACHE_TIMEOUT=600  
