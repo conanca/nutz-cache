@@ -60,7 +60,7 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 			chain.doChain();
 			// 获取方法返回值并增加相应缓存
 			List<?> returnObj = (List<?>) chain.getReturn();
-			if (returnObj != null) {
+			if (returnObj != null && returnObj.size() > 0) {
 				try {
 					setCache(cacheKey, returnObj, cacheAn.reverse(), cacheAn.cacheTimeout());
 					logger.debug("Set a new value for this cache");
