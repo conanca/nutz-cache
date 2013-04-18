@@ -25,7 +25,7 @@ public class RedisCacheDao implements CacheDao {
 	}
 
 	public void set(String cacheKey, Object cacheValue) throws Exception {
-		int timeout = cacheProp.getInt("STANDARD_CACHE_TIMEOUT", CacheConfig.DEFAULT_STANDARD_CACHE_TIMEOUT);
+		int timeout = cacheProp.getInt("DEFAULT_STRING_CACHE_TIMEOUT", CacheConfig.DEFAULT_STRING_CACHE_TIMEOUT);
 		set(cacheKey, timeout, cacheValue);
 	}
 

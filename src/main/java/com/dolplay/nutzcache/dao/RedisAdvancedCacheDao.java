@@ -49,7 +49,7 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 	}
 
 	public void zAdd(String cacheKey, double score, Object item) throws Exception {
-		int timeout = cacheProp.getInt("LIST_CACHE_TIMEOUT", CacheConfig.DEFAULT_LIST_CACHE_TIMEOUT);
+		int timeout = cacheProp.getInt("DEFAULT_ZSET_CACHE_TIMEOUT", CacheConfig.DEFAULT_ZSET_CACHE_TIMEOUT);
 		zAdd(cacheKey, timeout, score, item);
 	}
 
