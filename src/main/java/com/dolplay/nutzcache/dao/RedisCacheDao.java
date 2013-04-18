@@ -2,13 +2,10 @@ package com.dolplay.nutzcache.dao;
 
 import java.util.Set;
 
-import org.nutz.ioc.impl.PropertiesProxy;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import com.alibaba.fastjson.JSON;
-import com.dolplay.nutzcache.CacheConfig;
 
 /**
  * Redis实现的缓存DAO
@@ -16,17 +13,14 @@ import com.dolplay.nutzcache.CacheConfig;
  *
  */
 public class RedisCacheDao implements CacheDao {
-	protected PropertiesProxy cacheProp;
 	protected JedisPool jedisPool;
 
-	public RedisCacheDao(PropertiesProxy cacheProp, JedisPool jedisPool) {
-		this.cacheProp = cacheProp;
+	public RedisCacheDao(JedisPool jedisPool) {
 		this.jedisPool = jedisPool;
 	}
 
 	public void set(String cacheKey, Object cacheValue) throws Exception {
-		int timeout = cacheProp.getInt("DEFAULT_STRING_CACHE_TIMEOUT", CacheConfig.DEFAULT_STRING_CACHE_TIMEOUT);
-		set(cacheKey, timeout, cacheValue);
+		set(cacheKey, -1, cacheValue);
 	}
 
 	public void set(String cacheKey, int timeout, Object cacheValue) throws Exception {

@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.nutz.aop.InterceptorChain;
 import org.nutz.aop.MethodInterceptor;
+import org.nutz.ioc.impl.PropertiesProxy;
 import org.nutz.lang.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import com.dolplay.nutzcache.annotation.Cache;
 import com.dolplay.nutzcache.annotation.CacheKeySuffix;
 import com.dolplay.nutzcache.dao.CacheDao;
 import com.dolplay.nutzcache.lang.CStrings;
+import com.dolplay.nutzcache.type.CacheType;
 
 /**
  * @author Conanca
@@ -27,9 +29,14 @@ public class CacheInterceptor implements MethodInterceptor {
 	private static Logger logger = LoggerFactory.getLogger(CacheInterceptor.class);
 
 	private CacheDao cacheDao;
+	private PropertiesProxy cacheProp;
 
 	public CacheDao cacheDao() {
 		return cacheDao;
+	}
+
+	public PropertiesProxy cacheProp() {
+		return cacheProp;
 	}
 
 	public void filter(InterceptorChain chain) throws Throwable {
@@ -128,14 +135,10 @@ public class CacheInterceptor implements MethodInterceptor {
 		Object returnObj = chain.getReturn();
 		if (returnObj != null) {
 			// 获取缓存超时时间
-			int cacheTimeout = cacheAn.cacheTimeout();
+			int cacheTimeout = createCacheTimeout(cacheAn, cacheProp(), CacheType.string);
 			try {
 				//如果缓存超时时间设置的有效，则新增缓存时设置该超时时间，否则设置配置文件中所配置的超时时间
-				if (cacheTimeout != CacheConfig.INVALID_TIMEOUT) {
-					cacheDao().set(cacheKey, cacheTimeout, returnObj);
-				} else {
-					cacheDao().set(cacheKey, returnObj);
-				}
+				cacheDao().set(cacheKey, cacheTimeout, returnObj);
 				logger.debug("Set a new value for this cache");
 			} catch (Exception e) {
 				logger.error("Set cache error", e);
@@ -143,5 +146,21 @@ public class CacheInterceptor implements MethodInterceptor {
 		} else {
 			logger.warn("No value to set for this cache");
 		}
+	}
+
+	protected static int createCacheTimeout(Cache cacheAn, PropertiesProxy cacheProp, CacheType type) {
+		int cacheTimeout = cacheAn.cacheTimeout();
+		if (cacheTimeout == CacheConfig.INVALID_TIMEOUT) {
+			if (type.equals(CacheType.string)) {
+				cacheTimeout = cacheProp.getInt("DEFAULT_STRING_CACHE_TIMEOUT",
+						CacheConfig.DEFAULT_STRING_CACHE_TIMEOUT);
+			} else if (type.equals(CacheType.zset)) {
+				cacheTimeout = cacheProp.getInt("DEFAULT_ZSET_CACHE_TIMEOUT", CacheConfig.DEFAULT_ZSET_CACHE_TIMEOUT);
+			} else {
+				logger.warn("Unknown cache type" + type);
+				cacheTimeout = -1;
+			}
+		}
+		return cacheTimeout;
 	}
 }

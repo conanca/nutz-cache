@@ -9,7 +9,7 @@ import java.util.Set;
  */
 public interface CacheDao {
 	/**
-	 * 指定缓存名往缓存中增加一个值，如果存在将更新该缓存。注：缓存超时时间由配置文件配置
+	 * 指定缓存名往缓存中增加一个值，如果存在将更新该缓存。该缓存为永久缓存。
 	 * @param cacheKey
 	 * @param cacheValue
 	 * @throws Exception

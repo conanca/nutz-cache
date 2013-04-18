@@ -40,28 +40,30 @@ var ioc = {
 	// 配置了cacheDao示例
 	cacheDao: {
 		type : "com.dolplay.nutzcache.dao.RedisCacheDao",
-		args : [	 {refer : 'cacheProp'},{refer : 'jedisPool'}]
+		args : [	 {refer : 'jedisPool'}]
 	},
 	
 	// 字符串型缓存预先读取的方法拦截器配置
 	cacheInterceptor: {
 		type : "com.dolplay.nutzcache.interceptor.CacheInterceptor",
 		fields : {
-			cacheDao : {refer : 'cacheDao'}
+			cacheDao : {refer : 'cacheDao'},
+			cacheProp : {refer : 'cacheProp'}
 		}
 	},
 	
 	// 配置了advancedCacheDao示例
 	advancedCacheDao: {
 		type : "com.dolplay.nutzcache.dao.RedisAdvancedCacheDao",
-		args : [	 {refer : 'cacheProp'},{refer : 'jedisPool'}]
+		args : [{refer : 'jedisPool'}]
 	},
 	
 	// 有序集合型缓存预先读取的方法拦截器配置
 	advancedCacheInterceptor: {
 		type : "com.dolplay.nutzcache.interceptor.AdvancedCacheInterceptor",
 		fields : {
-			cacheDao : {refer : 'advancedCacheDao'}
+			cacheDao : {refer : 'advancedCacheDao'},
+			cacheProp : {refer : 'cacheProp'}
 		}
 	}
 };

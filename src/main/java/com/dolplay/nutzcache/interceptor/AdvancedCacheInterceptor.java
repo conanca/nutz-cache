@@ -10,7 +10,6 @@ import org.nutz.aop.InterceptorChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dolplay.nutzcache.CacheConfig;
 import com.dolplay.nutzcache.annotation.Cache;
 import com.dolplay.nutzcache.dao.AdvancedCacheDao;
 import com.dolplay.nutzcache.type.CacheType;
@@ -62,7 +61,7 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 			List<?> returnObj = (List<?>) chain.getReturn();
 			if (returnObj != null && returnObj.size() > 0) {
 				try {
-					setCache(cacheKey, returnObj, cacheAn.reverse(), cacheAn.cacheTimeout());
+					setCache(cacheKey, returnObj, cacheAn);
 					logger.debug("Set a new value for this cache");
 				} catch (Exception e) {
 					logger.error("Set cache error", e);
@@ -76,23 +75,19 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 		}
 	}
 
-	private void setCache(String cacheKey, List<?> returnObj, boolean reverse, int cacheTimeout) throws Exception {
+	private void setCache(String cacheKey, List<?> returnObj, Cache cacheAn) throws Exception {
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		List<?> items = new ArrayList(returnObj);
 		// 如果需要倒序存放入缓存中，则将顺序倒转
-		if (reverse) {
+		if (cacheAn.reverse()) {
 			Collections.reverse(items);
 		}
 		// 按items的顺序依次插入相应的缓存中
 		long now = System.currentTimeMillis();
-		boolean cacheTimeoutValid = cacheTimeout != CacheConfig.INVALID_TIMEOUT;
+		int cacheTimeout = createCacheTimeout(cacheAn, cacheProp(), CacheType.zset);
 		for (Object item : items) {
 			// 如果缓存超时时间设置的有效，则新增缓存时设置该超时时间，否则设置配置文件中所配置的超时时间
-			if (cacheTimeoutValid) {
-				cacheDao().zAdd(cacheKey, cacheTimeout, now++, item);
-			} else {
-				cacheDao().zAdd(cacheKey, now++, item);
-			}
+			cacheDao().zAdd(cacheKey, cacheTimeout, now++, item);
 		}
 	}
 }

@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.nutz.ioc.impl.PropertiesProxy;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import com.alibaba.fastjson.JSON;
-import com.dolplay.nutzcache.CacheConfig;
 import com.dolplay.nutzcache.type.Order;
 
 /**
@@ -20,8 +17,8 @@ import com.dolplay.nutzcache.type.Order;
  */
 public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCacheDao {
 
-	public RedisAdvancedCacheDao(PropertiesProxy cacheProp, JedisPool jedisPool) {
-		super(cacheProp, jedisPool);
+	public RedisAdvancedCacheDao(JedisPool jedisPool) {
+		super(jedisPool);
 	}
 
 	public void zAdd(String cacheKey, int seconds, double score, Object item) throws Exception {
@@ -49,8 +46,7 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 	}
 
 	public void zAdd(String cacheKey, double score, Object item) throws Exception {
-		int timeout = cacheProp.getInt("DEFAULT_ZSET_CACHE_TIMEOUT", CacheConfig.DEFAULT_ZSET_CACHE_TIMEOUT);
-		zAdd(cacheKey, timeout, score, item);
+		zAdd(cacheKey, -1, score, item);
 	}
 
 	public List<String> zQueryByRank(String cacheKey, long startIndex, long endIndex, Order order) throws Exception {
