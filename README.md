@@ -57,6 +57,6 @@ nutz-cache
 
 进阶
 ----
-请参考如下示例：
-UserService.java(https://github.com/conanca/nutz-cache/blob/master/src/test/java/com/dolplay/nutzcache/assets/service/UserService.java)
-UserAdvancedService.java(https://github.com/conanca/nutz-cache/blob/master/src/test/java/com/dolplay/nutzcache/assets/service/UserAdvancedService.java)
+请参考如下示例：  
+[UserService.java](https://github.com/conanca/nutz-cache/blob/master/src/test/java/com/dolplay/nutzcache/assets/service/UserService.java)  
+[UserAdvancedService.java](https://github.com/conanca/nutz-cache/blob/master/src/test/java/com/dolplay/nutzcache/assets/service/UserAdvancedService.java)
