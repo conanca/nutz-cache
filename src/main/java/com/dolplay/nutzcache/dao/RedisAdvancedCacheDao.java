@@ -190,4 +190,52 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 		}
 		return newList;
 	}
+
+	public long sAdd(String key, String[] members) throws Exception {
+		long addCount = 0;
+		Jedis jedis = null;
+		try {
+			jedis = jedisPool.getResource();
+			addCount = jedis.sadd(key, members);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			if (jedis != null) {
+				jedisPool.returnResource(jedis);
+			}
+		}
+		return addCount;
+	}
+
+	public long sRem(String key, String[] members) throws Exception {
+		long addCount = 0;
+		Jedis jedis = null;
+		try {
+			jedis = jedisPool.getResource();
+			addCount = jedis.srem(key, members);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			if (jedis != null) {
+				jedisPool.returnResource(jedis);
+			}
+		}
+		return addCount;
+	}
+
+	public boolean sIsMember(String key, String member) throws Exception {
+		boolean isMember = false;
+		Jedis jedis = null;
+		try {
+			jedis = jedisPool.getResource();
+			isMember = jedis.sismember(key, member);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			if (jedis != null) {
+				jedisPool.returnResource(jedis);
+			}
+		}
+		return isMember;
+	}
 }
