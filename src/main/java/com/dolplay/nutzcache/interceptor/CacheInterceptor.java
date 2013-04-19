@@ -17,7 +17,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.dolplay.nutzcache.CacheConfig;
 import com.dolplay.nutzcache.annotation.Cache;
 import com.dolplay.nutzcache.annotation.CacheKeySuffix;
-import com.dolplay.nutzcache.dao.CacheDao;
+import com.dolplay.nutzcache.dao.AdvancedCacheDao;
 import com.dolplay.nutzcache.lang.CStrings;
 import com.dolplay.nutzcache.type.CacheType;
 
@@ -28,10 +28,10 @@ import com.dolplay.nutzcache.type.CacheType;
 public class CacheInterceptor implements MethodInterceptor {
 	private static Logger logger = LoggerFactory.getLogger(CacheInterceptor.class);
 
-	private CacheDao cacheDao;
+	private AdvancedCacheDao cacheDao;
 	private PropertiesProxy cacheProp;
 
-	public CacheDao cacheDao() {
+	public AdvancedCacheDao cacheDao() {
 		return cacheDao;
 	}
 
@@ -106,6 +106,7 @@ public class CacheInterceptor implements MethodInterceptor {
 	 * @throws Throwable
 	 */
 	protected void cacheReturn(String cacheKey, InterceptorChain chain, Method method, Cache cacheAn) throws Throwable {
+		boolean isEternalCacheKeySetValid = isEternalCacheKeySetValid(cacheProp(), CacheType.string);
 		// 获取该方法欲读取的缓存的 VALUE
 		String cacheValue = null;
 		try {
@@ -128,6 +129,20 @@ public class CacheInterceptor implements MethodInterceptor {
 			return;
 		} else {
 			logger.debug("Can't get any value from this cache");
+			if (isEternalCacheKeySetValid) {
+				try {
+					if (cacheDao().sIsMember(
+							cacheProp().get("StringEternalCacheKeySetName",
+									CacheConfig.String_Eternal_Cache_KeySet_Name), cacheKey)) {
+						logger.debug(cacheKey + " is in " + CacheConfig.String_Eternal_Cache_KeySet_Name
+								+ ",will return null right now");
+						chain.setReturnValue(null);
+						return;
+					}
+				} catch (Exception e) {
+					logger.error("Read Cache error", e);
+				}
+			}
 		}
 		// 执行方法
 		chain.doChain();
@@ -146,6 +161,16 @@ public class CacheInterceptor implements MethodInterceptor {
 		} else {
 			logger.warn("No value to set for this cache");
 		}
+		// 往StringEternalCacheKeySet添加相应的Key
+		if (isEternalCacheKeySetValid) {
+			try {
+				cacheDao().sAdd(
+						cacheProp().get("StringEternalCacheKeySetName", CacheConfig.String_Eternal_Cache_KeySet_Name),
+						cacheKey);
+			} catch (Exception e) {
+				logger.error("Set cache error", e);
+			}
+		}
 	}
 
 	protected static int createCacheTimeout(Cache cacheAn, PropertiesProxy cacheProp, CacheType type) {
@@ -162,5 +187,21 @@ public class CacheInterceptor implements MethodInterceptor {
 			}
 		}
 		return cacheTimeout;
+	}
+
+	protected static boolean isEternalCacheKeySetValid(PropertiesProxy cacheProp, CacheType type) {
+		boolean isValid = false;
+		if (type.equals(CacheType.string)) {
+			String strIsValid = cacheProp.get("StringEternalCacheKeySetIsValid");
+			isValid = Strings.isEmpty(strIsValid) ? CacheConfig.StringEternalCacheKeySetIsValid : Boolean
+					.valueOf(strIsValid);
+		} else if (type.equals(CacheType.zset)) {
+			String strIsValid = cacheProp.get("ZsetEternalCacheKeySetIsValid");
+			isValid = Strings.isEmpty(strIsValid) ? CacheConfig.ZsetEternalCacheKeySetIsValid : Boolean
+					.valueOf(strIsValid);
+		} else {
+			logger.warn("Unknown cache type" + type);
+		}
+		return isValid;
 	}
 }

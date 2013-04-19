@@ -107,6 +107,7 @@ public class AdvancedCacheInterceptorTest {
 		List<String> namesCache = cacheDao.zQueryAll(CacheKeyPrefix.TEST_CACHE_NEWUSERS_NAMELIST, Order.Desc);
 		logger.debug("从缓存中获取结果:" + JSON.toJSONString(namesCache));
 		jedis.del(CacheKeyPrefix.TEST_CACHE_NEWUSERS_NAMELIST);
+		jedis.del("nutz-cache:ZsetEternalCacheKeySet");
 		List<String> names3 = userService.listNewUsers();
 		logger.debug("第三次查询用户结果：" + JSON.toJSONString(names3));
 		assertEquals(namesCache, names3);

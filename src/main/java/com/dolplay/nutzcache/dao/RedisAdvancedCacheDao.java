@@ -191,7 +191,7 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 		return newList;
 	}
 
-	public long sAdd(String key, String[] members) throws Exception {
+	public long sAdd(String key, String... members) throws Exception {
 		long addCount = 0;
 		Jedis jedis = null;
 		try {
@@ -207,7 +207,7 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 		return addCount;
 	}
 
-	public long sRem(String key, String[] members) throws Exception {
+	public long sRem(String key, String... members) throws Exception {
 		long addCount = 0;
 		Jedis jedis = null;
 		try {

@@ -10,8 +10,8 @@ import org.nutz.aop.InterceptorChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dolplay.nutzcache.CacheConfig;
 import com.dolplay.nutzcache.annotation.Cache;
-import com.dolplay.nutzcache.dao.AdvancedCacheDao;
 import com.dolplay.nutzcache.type.CacheType;
 import com.dolplay.nutzcache.type.Order;
 
@@ -22,13 +22,9 @@ import com.dolplay.nutzcache.type.Order;
 public class AdvancedCacheInterceptor extends CacheInterceptor {
 	private static Logger logger = LoggerFactory.getLogger(AdvancedCacheInterceptor.class);
 
-	private AdvancedCacheDao cacheDao;
-
-	public AdvancedCacheDao cacheDao() {
-		return cacheDao;
-	}
-
+	@SuppressWarnings("rawtypes")
 	protected void cacheReturn(String cacheKey, InterceptorChain chain, Method method, Cache cacheAn) throws Throwable {
+		boolean isEternalCacheKeySetValid = isEternalCacheKeySetValid(cacheProp(), CacheType.zset);
 		// 获取缓存类型，根据缓存类型不同分别对缓存有不同的操作方式
 		CacheType cacheType = cacheAn.cacheType();
 		if (cacheType.equals(CacheType.string)) {
@@ -54,6 +50,20 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 				return;
 			} else {
 				logger.debug("Can't get any value from this cache");
+				if (isEternalCacheKeySetValid) {
+					try {
+						if (cacheDao().sIsMember(
+								cacheProp().get("ZsetEternalCacheKeySetName",
+										CacheConfig.Zset_Eternal_Cache_KeySet_Name), cacheKey)) {
+							logger.debug(cacheKey + " is in " + CacheConfig.Zset_Eternal_Cache_KeySet_Name
+									+ ",will return null right now");
+							chain.setReturnValue(new ArrayList());
+							return;
+						}
+					} catch (Exception e) {
+						logger.error("Read Cache error", e);
+					}
+				}
 			}
 			// 执行方法
 			chain.doChain();
@@ -68,6 +78,16 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 				}
 			} else {
 				logger.warn("No value to set for this cache");
+			}
+			// 往ZsetEternalCacheKeySet添加相应的Key
+			if (isEternalCacheKeySetValid) {
+				try {
+					cacheDao().sAdd(
+							cacheProp().get("ZsetEternalCacheKeySetName", CacheConfig.Zset_Eternal_Cache_KeySet_Name),
+							cacheKey);
+				} catch (Exception e) {
+					logger.error("Set cache error", e);
+				}
 			}
 		} else {
 			logger.error("The method annotation : CacheType Error!", new RuntimeException(

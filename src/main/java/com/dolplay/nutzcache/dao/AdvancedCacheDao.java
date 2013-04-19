@@ -199,9 +199,9 @@ public interface AdvancedCacheDao extends CacheDao {
 	 */
 	public void zDelByScore(String cacheKey, double minScore, double maxScore) throws Exception;
 
-	public long sAdd(String key, String[] members) throws Exception;
+	public long sAdd(String key, String... members) throws Exception;
 
-	public long sRem(String key, String[] members) throws Exception;
+	public long sRem(String key, String... members) throws Exception;
 
 	public boolean sIsMember(String key, String member) throws Exception;
 }

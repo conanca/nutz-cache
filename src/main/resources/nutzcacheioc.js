@@ -47,7 +47,7 @@ var ioc = {
 	cacheInterceptor: {
 		type : "com.dolplay.nutzcache.interceptor.CacheInterceptor",
 		fields : {
-			cacheDao : {refer : 'cacheDao'},
+			cacheDao : {refer : 'advancedCacheDao'},
 			cacheProp : {refer : 'cacheProp'}
 		}
 	},
