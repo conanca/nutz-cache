@@ -26,6 +26,8 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 	protected void cacheReturn(String cacheKey, InterceptorChain chain, Method method, Cache cacheAn) throws Throwable {
 		boolean isEternalCacheKeySetValid = isEternalCacheKeySetValid(cacheProp(), CacheType.zset);
 		int cacheTimeout = createCacheTimeout(cacheAn, cacheProp(), CacheType.zset);
+		String zsetEternalCacheKeySetName = cacheProp().get("ZsetEternalCacheKeySetName",
+				CacheConfig.ZSET_ETERNAL_CACHE_KEY_SET_NAME);
 		// 获取缓存类型，根据缓存类型不同分别对缓存有不同的操作方式
 		CacheType cacheType = cacheAn.cacheType();
 		if (cacheType.equals(CacheType.string)) {
@@ -53,11 +55,9 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 				logger.debug("Can't get any value from this cache");
 				if (isEternalCacheKeySetValid && cacheTimeout < 0) {
 					try {
-						if (cacheDao().sIsMember(
-								cacheProp().get("cache-zsetEternalCacheKeySetName",
-										CacheConfig.ZSET_ETERNAL_CACHE_KEY_SET_NAME), cacheKey)) {
-							logger.debug(cacheKey + " is in " + CacheConfig.ZSET_ETERNAL_CACHE_KEY_SET_NAME
-									+ ",will return null right now");
+						if (cacheDao().sIsMember(zsetEternalCacheKeySetName, cacheKey)) {
+							logger.debug(cacheKey + " is in " + zsetEternalCacheKeySetName
+									+ ",will return empty list right now");
 							chain.setReturnValue(new ArrayList());
 							return;
 						}
@@ -83,9 +83,7 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 			// 往ZsetEternalCacheKeySet添加相应的Key
 			if (isEternalCacheKeySetValid && cacheTimeout < 0) {
 				try {
-					cacheDao().sAdd(
-							cacheProp().get("ZsetEternalCacheKeySetName", CacheConfig.ZSET_ETERNAL_CACHE_KEY_SET_NAME),
-							cacheKey);
+					cacheDao().sAdd(zsetEternalCacheKeySetName, cacheKey);
 				} catch (Exception e) {
 					logger.error("Set cache error", e);
 				}

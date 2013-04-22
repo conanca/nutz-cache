@@ -109,6 +109,8 @@ public class CacheInterceptor implements MethodInterceptor {
 		boolean isEternalCacheKeySetValid = isEternalCacheKeySetValid(cacheProp(), CacheType.string);
 		// 获取缓存超时时间
 		int cacheTimeout = createCacheTimeout(cacheAn, cacheProp(), CacheType.string);
+		String stringEternalCacheKeySetName = cacheProp().get("cahce-stringEternalCacheKeySetName",
+				CacheConfig.STRING_ETERNAL_CACHE_KEY_SET_NAME);
 		// 获取该方法欲读取的缓存的 VALUE
 		String cacheValue = null;
 		try {
@@ -133,10 +135,8 @@ public class CacheInterceptor implements MethodInterceptor {
 			logger.debug("Can't get any value from this cache");
 			if (isEternalCacheKeySetValid && cacheTimeout < 0) {
 				try {
-					if (cacheDao().sIsMember(
-							cacheProp().get("cahce-stringEternalCacheKeySetName",
-									CacheConfig.STRING_ETERNAL_CACHE_KEY_SET_NAME), cacheKey)) {
-						logger.debug(cacheKey + " is in " + CacheConfig.STRING_ETERNAL_CACHE_KEY_SET_NAME
+					if (cacheDao().sIsMember(stringEternalCacheKeySetName, cacheKey)) {
+						logger.debug(cacheKey + " is in " + stringEternalCacheKeySetName
 								+ ",will return null right now");
 						chain.setReturnValue(null);
 						return;
@@ -164,9 +164,7 @@ public class CacheInterceptor implements MethodInterceptor {
 		// 往StringEternalCacheKeySet添加相应的Key
 		if (isEternalCacheKeySetValid && cacheTimeout < 0) {
 			try {
-				cacheDao().sAdd(
-						cacheProp().get("cahce-stringEternalCacheKeySetName",
-								CacheConfig.STRING_ETERNAL_CACHE_KEY_SET_NAME), cacheKey);
+				cacheDao().sAdd(stringEternalCacheKeySetName, cacheKey);
 			} catch (Exception e) {
 				logger.error("Set cache error", e);
 			}
