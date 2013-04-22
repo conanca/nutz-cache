@@ -25,6 +25,7 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 	@SuppressWarnings("rawtypes")
 	protected void cacheReturn(String cacheKey, InterceptorChain chain, Method method, Cache cacheAn) throws Throwable {
 		boolean isEternalCacheKeySetValid = isEternalCacheKeySetValid(cacheProp(), CacheType.zset);
+		int cacheTimeout = createCacheTimeout(cacheAn, cacheProp(), CacheType.zset);
 		// 获取缓存类型，根据缓存类型不同分别对缓存有不同的操作方式
 		CacheType cacheType = cacheAn.cacheType();
 		if (cacheType.equals(CacheType.string)) {
@@ -50,7 +51,7 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 				return;
 			} else {
 				logger.debug("Can't get any value from this cache");
-				if (isEternalCacheKeySetValid) {
+				if (isEternalCacheKeySetValid && cacheTimeout < 0) {
 					try {
 						if (cacheDao().sIsMember(
 								cacheProp().get("ZsetEternalCacheKeySetName",
@@ -71,7 +72,7 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 			List<?> returnObj = (List<?>) chain.getReturn();
 			if (returnObj != null && returnObj.size() > 0) {
 				try {
-					setCache(cacheKey, returnObj, cacheAn);
+					setCache(cacheKey, returnObj, cacheAn.reverse(), cacheTimeout);
 					logger.debug("Set a new value for this cache");
 				} catch (Exception e) {
 					logger.error("Set cache error", e);
@@ -80,7 +81,7 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 				logger.warn("No value to set for this cache");
 			}
 			// 往ZsetEternalCacheKeySet添加相应的Key
-			if (isEternalCacheKeySetValid) {
+			if (isEternalCacheKeySetValid && cacheTimeout < 0) {
 				try {
 					cacheDao().sAdd(
 							cacheProp().get("ZsetEternalCacheKeySetName", CacheConfig.Zset_Eternal_Cache_KeySet_Name),
@@ -95,16 +96,15 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 		}
 	}
 
-	private void setCache(String cacheKey, List<?> returnObj, Cache cacheAn) throws Exception {
+	private void setCache(String cacheKey, List<?> returnObj, boolean reverse, int cacheTimeout) throws Exception {
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		List<?> items = new ArrayList(returnObj);
 		// 如果需要倒序存放入缓存中，则将顺序倒转
-		if (cacheAn.reverse()) {
+		if (reverse) {
 			Collections.reverse(items);
 		}
 		// 按items的顺序依次插入相应的缓存中
 		long now = System.currentTimeMillis();
-		int cacheTimeout = createCacheTimeout(cacheAn, cacheProp(), CacheType.zset);
 		for (Object item : items) {
 			// 如果缓存超时时间设置的有效，则新增缓存时设置该超时时间，否则设置配置文件中所配置的超时时间
 			cacheDao().zAdd(cacheKey, cacheTimeout, now++, item);

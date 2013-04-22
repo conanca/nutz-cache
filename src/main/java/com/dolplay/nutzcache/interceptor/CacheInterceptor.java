@@ -107,6 +107,8 @@ public class CacheInterceptor implements MethodInterceptor {
 	 */
 	protected void cacheReturn(String cacheKey, InterceptorChain chain, Method method, Cache cacheAn) throws Throwable {
 		boolean isEternalCacheKeySetValid = isEternalCacheKeySetValid(cacheProp(), CacheType.string);
+		// 获取缓存超时时间
+		int cacheTimeout = createCacheTimeout(cacheAn, cacheProp(), CacheType.string);
 		// 获取该方法欲读取的缓存的 VALUE
 		String cacheValue = null;
 		try {
@@ -129,7 +131,7 @@ public class CacheInterceptor implements MethodInterceptor {
 			return;
 		} else {
 			logger.debug("Can't get any value from this cache");
-			if (isEternalCacheKeySetValid) {
+			if (isEternalCacheKeySetValid && cacheTimeout < 0) {
 				try {
 					if (cacheDao().sIsMember(
 							cacheProp().get("StringEternalCacheKeySetName",
@@ -149,8 +151,6 @@ public class CacheInterceptor implements MethodInterceptor {
 		// 获取方法返回值并增加相应缓存
 		Object returnObj = chain.getReturn();
 		if (returnObj != null) {
-			// 获取缓存超时时间
-			int cacheTimeout = createCacheTimeout(cacheAn, cacheProp(), CacheType.string);
 			try {
 				//如果缓存超时时间设置的有效，则新增缓存时设置该超时时间，否则设置配置文件中所配置的超时时间
 				cacheDao().set(cacheKey, cacheTimeout, returnObj);
@@ -162,7 +162,7 @@ public class CacheInterceptor implements MethodInterceptor {
 			logger.warn("No value to set for this cache");
 		}
 		// 往StringEternalCacheKeySet添加相应的Key
-		if (isEternalCacheKeySetValid) {
+		if (isEternalCacheKeySetValid && cacheTimeout < 0) {
 			try {
 				cacheDao().sAdd(
 						cacheProp().get("StringEternalCacheKeySetName", CacheConfig.String_Eternal_Cache_KeySet_Name),

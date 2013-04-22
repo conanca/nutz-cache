@@ -21,7 +21,7 @@ public class TestReturnEmptyService extends IdEntityService<User> {
 	}
 
 	@Aop(InterceptorName.CACHEINTERCEPTOR)
-	@Cache(cacheKeyPrefix = "xobj")
+	@Cache(cacheKeyPrefix = "xobj", cacheTimeout = -1)
 	public User viewXobj() {
 		System.out.println("try to fetch date to get a list...");
 		System.out.println("ops,no date!");
