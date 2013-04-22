@@ -54,9 +54,9 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 				if (isEternalCacheKeySetValid && cacheTimeout < 0) {
 					try {
 						if (cacheDao().sIsMember(
-								cacheProp().get("ZsetEternalCacheKeySetName",
-										CacheConfig.Zset_Eternal_Cache_KeySet_Name), cacheKey)) {
-							logger.debug(cacheKey + " is in " + CacheConfig.Zset_Eternal_Cache_KeySet_Name
+								cacheProp().get("cache-zsetEternalCacheKeySetName",
+										CacheConfig.ZSET_ETERNAL_CACHE_KEY_SET_NAME), cacheKey)) {
+							logger.debug(cacheKey + " is in " + CacheConfig.ZSET_ETERNAL_CACHE_KEY_SET_NAME
 									+ ",will return null right now");
 							chain.setReturnValue(new ArrayList());
 							return;
@@ -84,7 +84,7 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 			if (isEternalCacheKeySetValid && cacheTimeout < 0) {
 				try {
 					cacheDao().sAdd(
-							cacheProp().get("ZsetEternalCacheKeySetName", CacheConfig.Zset_Eternal_Cache_KeySet_Name),
+							cacheProp().get("ZsetEternalCacheKeySetName", CacheConfig.ZSET_ETERNAL_CACHE_KEY_SET_NAME),
 							cacheKey);
 				} catch (Exception e) {
 					logger.error("Set cache error", e);

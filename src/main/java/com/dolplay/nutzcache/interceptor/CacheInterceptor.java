@@ -134,9 +134,9 @@ public class CacheInterceptor implements MethodInterceptor {
 			if (isEternalCacheKeySetValid && cacheTimeout < 0) {
 				try {
 					if (cacheDao().sIsMember(
-							cacheProp().get("StringEternalCacheKeySetName",
-									CacheConfig.String_Eternal_Cache_KeySet_Name), cacheKey)) {
-						logger.debug(cacheKey + " is in " + CacheConfig.String_Eternal_Cache_KeySet_Name
+							cacheProp().get("cahce-stringEternalCacheKeySetName",
+									CacheConfig.STRING_ETERNAL_CACHE_KEY_SET_NAME), cacheKey)) {
+						logger.debug(cacheKey + " is in " + CacheConfig.STRING_ETERNAL_CACHE_KEY_SET_NAME
 								+ ",will return null right now");
 						chain.setReturnValue(null);
 						return;
@@ -165,8 +165,8 @@ public class CacheInterceptor implements MethodInterceptor {
 		if (isEternalCacheKeySetValid && cacheTimeout < 0) {
 			try {
 				cacheDao().sAdd(
-						cacheProp().get("StringEternalCacheKeySetName", CacheConfig.String_Eternal_Cache_KeySet_Name),
-						cacheKey);
+						cacheProp().get("cahce-stringEternalCacheKeySetName",
+								CacheConfig.STRING_ETERNAL_CACHE_KEY_SET_NAME), cacheKey);
 			} catch (Exception e) {
 				logger.error("Set cache error", e);
 			}
@@ -177,10 +177,11 @@ public class CacheInterceptor implements MethodInterceptor {
 		int cacheTimeout = cacheAn.cacheTimeout();
 		if (cacheTimeout == CacheConfig.INVALID_TIMEOUT) {
 			if (type.equals(CacheType.string)) {
-				cacheTimeout = cacheProp.getInt("DEFAULT_STRING_CACHE_TIMEOUT",
+				cacheTimeout = cacheProp.getInt("cache-defaultStringCacheTimeout",
 						CacheConfig.DEFAULT_STRING_CACHE_TIMEOUT);
 			} else if (type.equals(CacheType.zset)) {
-				cacheTimeout = cacheProp.getInt("DEFAULT_ZSET_CACHE_TIMEOUT", CacheConfig.DEFAULT_ZSET_CACHE_TIMEOUT);
+				cacheTimeout = cacheProp
+						.getInt("cache-defaultZsetCacheTimeout", CacheConfig.DEFAULT_ZSET_CACHE_TIMEOUT);
 			} else {
 				logger.warn("Unknown cache type" + type);
 				cacheTimeout = -1;
@@ -192,12 +193,12 @@ public class CacheInterceptor implements MethodInterceptor {
 	protected static boolean isEternalCacheKeySetValid(PropertiesProxy cacheProp, CacheType type) {
 		boolean isValid = false;
 		if (type.equals(CacheType.string)) {
-			String strIsValid = cacheProp.get("StringEternalCacheKeySetIsValid");
-			isValid = Strings.isEmpty(strIsValid) ? CacheConfig.StringEternalCacheKeySetIsValid : Boolean
+			String strIsValid = cacheProp.get("cache-stringEternalCacheKeySetIsValid");
+			isValid = Strings.isEmpty(strIsValid) ? CacheConfig.STRING_ETERNAL_CACHE_KEY_SET_IS_VALID : Boolean
 					.valueOf(strIsValid);
 		} else if (type.equals(CacheType.zset)) {
-			String strIsValid = cacheProp.get("ZsetEternalCacheKeySetIsValid");
-			isValid = Strings.isEmpty(strIsValid) ? CacheConfig.ZsetEternalCacheKeySetIsValid : Boolean
+			String strIsValid = cacheProp.get("cache-zsetEternalCacheKeySetIsValid");
+			isValid = Strings.isEmpty(strIsValid) ? CacheConfig.ZSET_ETERNAL_CACHE_KEY_SET_IS_VALID : Boolean
 					.valueOf(strIsValid);
 		} else {
 			logger.warn("Unknown cache type" + type);
