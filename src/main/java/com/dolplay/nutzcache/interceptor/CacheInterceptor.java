@@ -129,10 +129,10 @@ public class CacheInterceptor implements MethodInterceptor {
 				returnValue = JSON.parseObject(cacheValue, returnType);
 			}
 			chain.setReturnValue(returnValue);
-			logger.debug("Get a value from this cache");
+			logger.debug("Get a value from this cache:" + cacheKey);
 			return;
 		} else {
-			logger.debug("Can't get any value from this cache");
+			logger.debug("Can't get any value from this cache:" + cacheKey);
 			if (isEternalCacheKeySetValid && cacheTimeout < 0) {
 				try {
 					if (cacheDao().sIsMember(stringEternalCacheKeySetName, cacheKey)) {
@@ -154,12 +154,12 @@ public class CacheInterceptor implements MethodInterceptor {
 			try {
 				//如果缓存超时时间设置的有效，则新增缓存时设置该超时时间，否则设置配置文件中所配置的超时时间
 				cacheDao().set(cacheKey, cacheTimeout, returnObj);
-				logger.debug("Set a new value for this cache");
+				logger.debug("Set a new value for this cache:" + cacheKey);
 			} catch (Exception e) {
 				logger.error("Set cache error", e);
 			}
 		} else {
-			logger.warn("No value to set for this cache");
+			logger.warn("No value to set for this cache:" + cacheKey);
 		}
 		// 往StringEternalCacheKeySet添加相应的Key
 		if (isEternalCacheKeySetValid && cacheTimeout < 0) {

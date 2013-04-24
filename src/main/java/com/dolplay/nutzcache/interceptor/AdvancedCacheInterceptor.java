@@ -49,10 +49,10 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 			// 若缓存值不为空，则该方法直接返回缓存里相应的值
 			if (cacheValue != null && cacheValue.size() > 0) {
 				chain.setReturnValue(cacheValue);
-				logger.debug("Get a value from this cache");
+				logger.debug("Get a value from this cache:" + cacheKey);
 				return;
 			} else {
-				logger.debug("Can't get any value from this cache");
+				logger.debug("Can't get any value from this cache:" + cacheKey);
 				if (isEternalCacheKeySetValid && cacheTimeout < 0) {
 					try {
 						if (cacheDao().sIsMember(zsetEternalCacheKeySetName, cacheKey)) {
@@ -73,12 +73,12 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 			if (returnObj != null && returnObj.size() > 0) {
 				try {
 					setCache(cacheKey, returnObj, cacheAn.reverse(), cacheTimeout);
-					logger.debug("Set a new value for this cache");
+					logger.debug("Set a new value for this cache:" + cacheKey);
 				} catch (Exception e) {
-					logger.error("Set cache error", e);
+					logger.error("Set cache error:" + cacheKey, e);
 				}
 			} else {
-				logger.warn("No value to set for this cache");
+				logger.warn("No value to set for this cache:" + cacheKey);
 			}
 			// 往ZsetEternalCacheKeySet添加相应的Key
 			if (isEternalCacheKeySetValid && cacheTimeout < 0) {
