@@ -1,9 +1,12 @@
 package com.dolplay.nutzcache.dao;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPool;
 
 import com.alibaba.fastjson.JSON;
 
@@ -13,9 +16,9 @@ import com.alibaba.fastjson.JSON;
  *
  */
 public class RedisCacheDao implements CacheDao {
-	protected JedisPool jedisPool;
+	protected ShardedJedisPool jedisPool;
 
-	public RedisCacheDao(JedisPool jedisPool) {
+	public RedisCacheDao(ShardedJedisPool jedisPool) {
 		this.jedisPool = jedisPool;
 	}
 
@@ -24,7 +27,7 @@ public class RedisCacheDao implements CacheDao {
 	}
 
 	public void set(String cacheKey, int timeout, Object cacheValue) throws Exception {
-		Jedis jedis = null;
+		ShardedJedis jedis = null;
 		try {
 			jedis = jedisPool.getResource();
 			if (timeout <= 0) {
@@ -43,7 +46,7 @@ public class RedisCacheDao implements CacheDao {
 
 	public String get(String cacheKey) throws Exception {
 		String valueJson = null;
-		Jedis jedis = null;
+		ShardedJedis jedis = null;
 		try {
 			jedis = jedisPool.getResource();
 			valueJson = jedis.get(cacheKey);
@@ -63,11 +66,13 @@ public class RedisCacheDao implements CacheDao {
 	}
 
 	public long remove(String... cacheKeys) throws Exception {
-		Jedis jedis = null;
-		Long count = null;
+		ShardedJedis jedis = null;
+		long count = 0;
 		try {
 			jedis = jedisPool.getResource();
-			count = jedis.del(cacheKeys);
+			for (String cacheKey : cacheKeys) {
+				count += jedis.del(cacheKey);
+			}
 		} catch (Exception e) {
 			throw e;
 		} finally {
@@ -75,11 +80,11 @@ public class RedisCacheDao implements CacheDao {
 				jedisPool.returnResource(jedis);
 			}
 		}
-		return count == null ? 0 : count.longValue();
+		return count;
 	}
 
 	public boolean expire(String cacheKey, int seconds) throws Exception {
-		Jedis jedis = null;
+		ShardedJedis jedis = null;
 		long success = 0;
 		try {
 			jedis = jedisPool.getResource();
@@ -95,7 +100,7 @@ public class RedisCacheDao implements CacheDao {
 	}
 
 	public boolean exists(String cacheKey) throws Exception {
-		Jedis jedis = null;
+		ShardedJedis jedis = null;
 		boolean isExist = false;
 		try {
 			jedis = jedisPool.getResource();
@@ -111,11 +116,15 @@ public class RedisCacheDao implements CacheDao {
 	}
 
 	public Set<String> keySet(String pattern) throws Exception {
-		Jedis jedis = null;
+		ShardedJedis jedis = null;
 		Set<String> keySet = null;
 		try {
 			jedis = jedisPool.getResource();
-			keySet = jedis.keys(pattern);
+			Collection<Jedis> jedisColl = jedis.getAllShards();
+			keySet = new HashSet<String>();
+			for (Jedis aJedis : jedisColl) {
+				keySet.addAll(aJedis.keys(pattern));
+			}
 		} catch (Exception e) {
 			throw e;
 		} finally {
@@ -127,7 +136,7 @@ public class RedisCacheDao implements CacheDao {
 	}
 
 	public String keyType(String key) throws Exception {
-		Jedis jedis = null;
+		ShardedJedis jedis = null;
 		String keyType = null;
 		try {
 			jedis = jedisPool.getResource();
@@ -140,4 +149,5 @@ public class RedisCacheDao implements CacheDao {
 		}
 		return keyType;
 	}
+
 }

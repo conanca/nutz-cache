@@ -8,7 +8,7 @@ var ioc = {
 			paths : [ "cache.properties" ]
 		}
 	},
-	
+
 	jedisPoolConfig : {
 		type : 'redis.clients.jedis.JedisPoolConfig',
 		fields : {
@@ -19,9 +19,22 @@ var ioc = {
 			testOnReturn : { java : "$cacheProp.get('pool-testOnReturn',true)" }
 		}
 	},
-	
+
+	si1:{
+		type : 'redis.clients.jedis.JedisShardInfo',
+		args : [ 
+		        	{ java : "$cacheProp.get('redis1-host','127.0.0.1')" },
+		        	{ java : "$cacheProp.getInt('redis1-port',6379)" },
+					{ java : "$cacheProp.getInt('redis1-timeout',2000)" },
+					{ java : "$cacheProp.get('redis1-name','redis1')" }	
+		         ],
+		fields : {
+			password : { java : "$cacheProp.get('redis1-password',null)" }
+		}
+	},
+
 	jedisPool : {
-		type : 'redis.clients.jedis.JedisPool',
+		type : 'redis.clients.jedis.ShardedJedisPool',
 		events : {
 			depose : 'destroy'
 		},
@@ -29,20 +42,18 @@ var ioc = {
 		    {
 				refer : 'jedisPoolConfig'
 			},
-			{ java : "$cacheProp.get('redis-host','127.0.0.1')" },						// host
-			{ java : "$cacheProp.getInt('redis-port',6379)" },						// port
-			{ java : "$cacheProp.getInt('redis-timeout',2000)" },					// timeout
-			{ java : "$cacheProp.get('redis-password',null)" },				// password
-			{ java : "$cacheProp.getInt('redis-databaseNumber',0)" }	// database number
+			[
+			 {refer:'si1'}
+			 ]
 		]
 	},
-	
+
 	// 配置了cacheDao示例
 	cacheDao: {
 		type : "com.dolplay.nutzcache.dao.RedisCacheDao",
 		args : [	 {refer : 'jedisPool'}]
 	},
-	
+
 	// 字符串型缓存预先读取的方法拦截器配置
 	cacheInterceptor: {
 		type : "com.dolplay.nutzcache.interceptor.CacheInterceptor",
@@ -51,13 +62,13 @@ var ioc = {
 			cacheProp : {refer : 'cacheProp'}
 		}
 	},
-	
+
 	// 配置了advancedCacheDao示例
 	advancedCacheDao: {
 		type : "com.dolplay.nutzcache.dao.RedisAdvancedCacheDao",
 		args : [{refer : 'jedisPool'}]
 	},
-	
+
 	// 有序集合型缓存预先读取的方法拦截器配置
 	advancedCacheInterceptor: {
 		type : "com.dolplay.nutzcache.interceptor.AdvancedCacheInterceptor",

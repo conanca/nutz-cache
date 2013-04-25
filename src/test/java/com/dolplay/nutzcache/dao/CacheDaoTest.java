@@ -2,6 +2,7 @@ package com.dolplay.nutzcache.dao;
 
 import static org.junit.Assert.*;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPool;
 
 import com.dolplay.nutzcache.assets.domain.User;
 import com.dolplay.nutzcache.assets.utils.IocProvider;
@@ -24,8 +26,8 @@ import com.dolplay.nutzcache.assets.utils.IocProvider;
 public class CacheDaoTest {
 	private static Logger logger = LoggerFactory.getLogger(CacheDaoTest.class);
 	private static CacheDao cacheDao;
-	private static JedisPool pool;
-	private static Jedis jedis;
+	private static ShardedJedisPool pool;
+	private static ShardedJedis jedis;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -40,9 +42,12 @@ public class CacheDaoTest {
 
 		// 初始化redis数据及连接
 		logger.info("初始化redis数据及连接...");
-		pool = ioc.get(JedisPool.class, "jedisPool");
+		pool = ioc.get(ShardedJedisPool.class, "jedisPool");
 		jedis = pool.getResource();
-		jedis.flushDB();
+		Collection<Jedis> jedisColl = jedis.getAllShards();
+		for (Jedis jedis : jedisColl) {
+			jedis.flushAll();
+		}
 
 		// 初始化cacheDao
 		cacheDao = ioc.get(CacheDao.class);
@@ -58,16 +63,6 @@ public class CacheDaoTest {
 		jedis.set("oooo", "OK!");
 		assertTrue(cacheDao.exists("oooo"));
 		assertFalse(cacheDao.exists("xxxx"));
-	}
-
-	@Test
-	public void testKeySet() throws Exception {
-		jedis.set("abcd", "OK!");
-		jedis.set("hello1", "OK!");
-		jedis.set("hello2", "OK!");
-		jedis.set("hellokk", "OK!");
-		assertEquals(jedis.keys("hello*"), cacheDao.keySet("hello*"));
-		assertEquals(jedis.keys("abcd"), cacheDao.keySet("abcd"));
 	}
 
 	@Test

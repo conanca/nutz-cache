@@ -2,6 +2,7 @@ package com.dolplay.nutzcache.interceptor;
 
 import static org.junit.Assert.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -17,7 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPool;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -28,8 +30,8 @@ import com.dolplay.nutzcache.assets.utils.IocProvider;
 
 public class CacheInterceptorTest {
 	private static Logger logger = LoggerFactory.getLogger(CacheInterceptorTest.class);
-	private static JedisPool pool;
-	private static Jedis jedis;
+	private static ShardedJedisPool pool;
+	private static ShardedJedis jedis;
 	private static UserService userService;
 
 	@BeforeClass
@@ -45,9 +47,12 @@ public class CacheInterceptorTest {
 
 		// 初始化redis数据及连接
 		logger.info("初始化redis数据及连接...");
-		pool = ioc.get(JedisPool.class, "jedisPool");
+		pool = ioc.get(ShardedJedisPool.class, "jedisPool");
 		jedis = pool.getResource();
-		jedis.flushDB();
+		Collection<Jedis> jedisColl = jedis.getAllShards();
+		for (Jedis jedis : jedisColl) {
+			jedis.flushAll();
+		}
 
 		// 初始化UserService
 		userService = ioc.get(UserService.class);

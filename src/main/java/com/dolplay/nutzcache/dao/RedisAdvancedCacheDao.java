@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPool;
 
 import com.alibaba.fastjson.JSON;
 import com.dolplay.nutzcache.type.Order;
@@ -17,12 +17,12 @@ import com.dolplay.nutzcache.type.Order;
  */
 public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCacheDao {
 
-	public RedisAdvancedCacheDao(JedisPool jedisPool) {
+	public RedisAdvancedCacheDao(ShardedJedisPool jedisPool) {
 		super(jedisPool);
 	}
 
 	public void zAdd(String cacheKey, int seconds, double score, Object item) throws Exception {
-		Jedis jedis = null;
+		ShardedJedis jedis = null;
 		try {
 			jedis = jedisPool.getResource();
 			boolean isNew = !jedis.exists(cacheKey);
@@ -50,7 +50,7 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 	}
 
 	public List<String> zQueryByRank(String cacheKey, long startIndex, long endIndex, Order order) throws Exception {
-		Jedis jedis = null;
+		ShardedJedis jedis = null;
 		List<String> valueList = null;
 		try {
 			jedis = jedisPool.getResource();
@@ -76,7 +76,7 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 	}
 
 	public List<String> zQueryByScore(String cacheKey, double minScore, double maxScore, Order order) throws Exception {
-		Jedis jedis = null;
+		ShardedJedis jedis = null;
 		List<String> valueList = null;
 		try {
 			jedis = jedisPool.getResource();
@@ -138,7 +138,7 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 	}
 
 	public void zDel(String cacheKey, String... items) throws Exception {
-		Jedis jedis = null;
+		ShardedJedis jedis = null;
 		try {
 			jedis = jedisPool.getResource();
 			jedis.zrem(cacheKey, items);
@@ -152,7 +152,7 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 	}
 
 	public void zDelByRank(String cacheKey, long startIndex, long endIndex) throws Exception {
-		Jedis jedis = null;
+		ShardedJedis jedis = null;
 		try {
 			jedis = jedisPool.getResource();
 			jedis.zremrangeByRank(cacheKey, startIndex, endIndex);
@@ -166,7 +166,7 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 	}
 
 	public void zDelByScore(String cacheKey, double minScore, double maxScore) throws Exception {
-		Jedis jedis = null;
+		ShardedJedis jedis = null;
 		try {
 			jedis = jedisPool.getResource();
 			jedis.zremrangeByScore(cacheKey, minScore, maxScore);
@@ -193,7 +193,7 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 
 	public long sAdd(String key, String... members) throws Exception {
 		long addCount = 0;
-		Jedis jedis = null;
+		ShardedJedis jedis = null;
 		try {
 			jedis = jedisPool.getResource();
 			addCount = jedis.sadd(key, members);
@@ -209,7 +209,7 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 
 	public long sRem(String key, String... members) throws Exception {
 		long addCount = 0;
-		Jedis jedis = null;
+		ShardedJedis jedis = null;
 		try {
 			jedis = jedisPool.getResource();
 			addCount = jedis.srem(key, members);
@@ -225,7 +225,7 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 
 	public boolean sIsMember(String key, String member) throws Exception {
 		boolean isMember = false;
-		Jedis jedis = null;
+		ShardedJedis jedis = null;
 		try {
 			jedis = jedisPool.getResource();
 			isMember = jedis.sismember(key, member);
