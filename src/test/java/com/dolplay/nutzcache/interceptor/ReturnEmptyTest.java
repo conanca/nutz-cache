@@ -1,5 +1,6 @@
 package com.dolplay.nutzcache.interceptor;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.AfterClass;
@@ -13,7 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPool;
 
 import com.alibaba.fastjson.JSON;
 import com.dolplay.nutzcache.assets.domain.User;
@@ -22,8 +24,8 @@ import com.dolplay.nutzcache.assets.utils.IocProvider;
 
 public class ReturnEmptyTest {
 	private static Logger logger = LoggerFactory.getLogger(ReturnEmptyTest.class);
-	private static JedisPool pool;
-	private static Jedis jedis;
+	private static ShardedJedisPool pool;
+	private static ShardedJedis jedis;
 	private static TestReturnEmptyService testService;
 
 	@BeforeClass
@@ -39,9 +41,12 @@ public class ReturnEmptyTest {
 
 		// 初始化redis数据及连接
 		logger.info("初始化redis数据及连接...");
-		pool = ioc.get(JedisPool.class, "jedisPool");
+		pool = ioc.get(ShardedJedisPool.class, "jedisPool");
 		jedis = pool.getResource();
-		jedis.flushDB();
+		Collection<Jedis> jedisColl = jedis.getAllShards();
+		for (Jedis jedis : jedisColl) {
+			jedis.flushAll();
+		}
 
 		// 初始化UserService
 		testService = ioc.get(TestReturnEmptyService.class);
