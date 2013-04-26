@@ -26,13 +26,6 @@ public class CStringsTest {
 	}
 
 	@Test
-	public void testCacheKeyStringLongArray() {
-		String cacheKey = CStrings.cacheKey("cache:test1", 999999L, 33L, 231L, 11L);
-		System.out.println(cacheKey);
-		assertEquals("cache:test1:999999:33:231:11", cacheKey);
-	}
-
-	@Test
 	public void testCommonCacheKey() {
 		List<Integer> l = Lang.array2list(Lang.array(1, 3, 55, 6));
 		User u = new User();

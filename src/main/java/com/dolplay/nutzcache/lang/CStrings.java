@@ -55,23 +55,6 @@ public class CStrings {
 	 * @param cacheKeySuffixs
 	 * @return
 	 */
-	public static String cacheKey(String cacheKeyPrefix, long... cacheKeySuffixs) {
-		StringBuilder sb = new StringBuilder(cacheKeyPrefix);
-		if (cacheKeySuffixs != null && cacheKeySuffixs.length > 0) {
-			for (long cacheKeySuffix : cacheKeySuffixs) {
-				sb.append(CacheConfig.CACHEKEY_DELIMITER);
-				sb.append(cacheKeySuffix);
-			}
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * 根据给定的缓存名称前缀和后缀，拼接一个缓存的名称
-	 * @param cacheKeyPrefix
-	 * @param cacheKeySuffixs
-	 * @return
-	 */
 	public static String commonCacheKey(String cacheKeyPrefix, Object... cacheKeySuffixs) {
 		StringBuilder sb = new StringBuilder(cacheKeyPrefix);
 		if (cacheKeySuffixs != null && cacheKeySuffixs.length > 0) {
