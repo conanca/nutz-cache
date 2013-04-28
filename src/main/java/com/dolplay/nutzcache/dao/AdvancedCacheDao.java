@@ -1,6 +1,7 @@
 package com.dolplay.nutzcache.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import com.dolplay.nutzcache.type.Order;
 
@@ -200,6 +201,8 @@ public interface AdvancedCacheDao extends CacheDao {
 	public void zDelByScore(String cacheKey, double minScore, double maxScore) throws Exception;
 
 	public long sAdd(String key, String... members) throws Exception;
+
+	public Set<String> sMember(String key) throws Exception;
 
 	public long sRem(String key, String... members) throws Exception;
 

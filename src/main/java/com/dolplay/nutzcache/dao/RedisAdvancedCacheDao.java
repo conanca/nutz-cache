@@ -207,6 +207,22 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 		return addCount;
 	}
 
+	public Set<String> sMember(String key) throws Exception {
+		Set<String> members = null;
+		ShardedJedis jedis = null;
+		try {
+			jedis = jedisPool.getResource();
+			members = jedis.smembers(key);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			if (jedis != null) {
+				jedisPool.returnResource(jedis);
+			}
+		}
+		return members;
+	}
+
 	public long sRem(String key, String... members) throws Exception {
 		long addCount = 0;
 		ShardedJedis jedis = null;
