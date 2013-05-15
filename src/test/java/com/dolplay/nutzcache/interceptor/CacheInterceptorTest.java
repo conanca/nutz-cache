@@ -64,9 +64,10 @@ public class CacheInterceptorTest {
 	}
 
 	@Test
-	public void testSimple() {
+	public void testSimple() throws InterruptedException {
 		User user1 = userService.viewReferenceUser();
 		logger.debug("第一次查询结果：" + JSON.toJSONString(user1));
+		Thread.sleep(500);
 		assertTrue(jedis.exists(CacheKeyPrefix.TEST_CACHE_REFERENCEUSER));
 		User user2 = userService.viewReferenceUser();
 		logger.debug("第二次查询结果：" + JSON.toJSONString(user2));
@@ -74,9 +75,10 @@ public class CacheInterceptorTest {
 	}
 
 	@Test
-	public void testSimple2() {
+	public void testSimple2() throws InterruptedException {
 		String user1 = userService.viewReferenceUserName();
 		logger.debug("第一次查询结果：" + user1);
+		Thread.sleep(500);
 		assertTrue(jedis.exists(CacheKeyPrefix.TEST_CACHE_REFERENCEUSERNAME));
 		String user2 = userService.viewReferenceUserName();
 		logger.debug("第二次查询结果：" + user2);
@@ -84,9 +86,10 @@ public class CacheInterceptorTest {
 	}
 
 	@Test
-	public void testCacheKeySuffix() {
+	public void testCacheKeySuffix() throws InterruptedException {
 		User user1 = userService.view(3);
 		logger.debug("第一次查询结果：" + JSON.toJSONString(user1));
+		Thread.sleep(500);
 		assertTrue(jedis.exists(CacheKeyPrefix.TEST_CACHE_USER + ":" + 3));
 		User user2 = userService.view(3);
 		logger.debug("第二次查询结果：" + JSON.toJSONString(user2));
@@ -94,12 +97,13 @@ public class CacheInterceptorTest {
 	}
 
 	@Test
-	public void testCacheKeySuffix2() {
+	public void testCacheKeySuffix2() throws InterruptedException {
 		Pager pager = new Pager();
 		pager.setPageNumber(1);
 		pager.setPageSize(5);
 		pager.setRecordCount(0);
 		List<User> userList1 = userService.listInPage(pager);
+		Thread.sleep(500);
 		logger.debug("第一次查询结果：" + JSON.toJSONString(userList1));
 		String key = CacheKeyPrefix.TEST_CACHE_ALLUSERS_INPAGE + ":"
 				+ JSON.toJSONString(pager, SerializerFeature.UseSingleQuotes);
@@ -111,8 +115,9 @@ public class CacheInterceptorTest {
 	}
 
 	@Test
-	public void testTimeOut() {
+	public void testTimeOut() throws InterruptedException {
 		int count1 = userService.countUser();
+		Thread.sleep(500);
 		long ttl = jedis.ttl(CacheKeyPrefix.TEST_CACHE_COUNTUSER);
 		assertTrue(ttl <= 600 && ttl > 590);
 		int count2 = userService.countUser();
@@ -120,9 +125,10 @@ public class CacheInterceptorTest {
 	}
 
 	@Test
-	public void testReturnSet() {
+	public void testReturnSet() throws InterruptedException {
 		Set<Integer> userIds1 = userService.userIds();
 		logger.debug("第一次查询结果：" + JSON.toJSONString(userIds1));
+		Thread.sleep(500);
 		Set<Integer> userIds2 = userService.userIds();
 		logger.debug("第二次查询结果：" + JSON.toJSONString(userIds2));
 		assertEquals(userIds1, userIds2);

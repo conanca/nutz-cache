@@ -3,7 +3,6 @@ package com.dolplay.nutzcache.interceptor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.nutz.aop.InterceptorChain;
@@ -70,42 +69,12 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 			chain.doChain();
 			// 获取方法返回值并增加相应缓存
 			List<?> returnObj = (List<?>) chain.getReturn();
-			if (returnObj != null && returnObj.size() > 0) {
-				try {
-					setCache(cacheKey, returnObj, cacheAn.reverse(), cacheTimeout);
-					logger.debug("Set a new value for this cache:" + cacheKey);
-				} catch (Exception e) {
-					logger.error("Set cache error:" + cacheKey, e);
-				}
-			} else {
-				logger.warn("No value to set for this cache:" + cacheKey);
-			}
-			// 往ZsetEternalCacheKeySet添加相应的Key
-			if (isEternalCacheKeySetValid && cacheTimeout < 0) {
-				try {
-					cacheDao().sAdd(zsetEternalCacheKeySetName, cacheKey);
-				} catch (Exception e) {
-					logger.error("Set cache error", e);
-				}
-			}
+			AdvancedReturn2Cache ar2c = new AdvancedReturn2Cache(cacheDao(), cacheKey, cacheTimeout, returnObj,
+					cacheAn.reverse(), isEternalCacheKeySetValid, zsetEternalCacheKeySetName);
+			ar2c.start();
 		} else {
 			logger.error("The method annotation : CacheType Error!", new RuntimeException(
 					"The method annotation : CacheType Error"));
-		}
-	}
-
-	private void setCache(String cacheKey, List<?> returnObj, boolean reverse, int cacheTimeout) throws Exception {
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		List<?> items = new ArrayList(returnObj);
-		// 如果需要倒序存放入缓存中，则将顺序倒转
-		if (reverse) {
-			Collections.reverse(items);
-		}
-		// 按items的顺序依次插入相应的缓存中
-		long now = System.currentTimeMillis();
-		for (Object item : items) {
-			// 如果缓存超时时间设置的有效，则新增缓存时设置该超时时间，否则设置配置文件中所配置的超时时间
-			cacheDao().zAdd(cacheKey, cacheTimeout, now++, item);
 		}
 	}
 }

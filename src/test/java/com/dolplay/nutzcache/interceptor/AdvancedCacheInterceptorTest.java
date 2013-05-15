@@ -65,9 +65,10 @@ public class AdvancedCacheInterceptorTest {
 	}
 
 	@Test
-	public void testSimple() throws ParseException {
+	public void testSimple() throws ParseException, InterruptedException {
 		List<Integer> ids1 = userService.listIdByGender("male");
 		logger.debug("第一次查询用户结果：" + JSON.toJSONString(ids1));
+		Thread.sleep(500);
 		List<Integer> ids2 = userService.listIdByGender("male");
 		logger.debug("第二次查询用户结果：" + JSON.toJSONString(ids2));
 		assertEquals(ids1, ids2);
@@ -80,15 +81,17 @@ public class AdvancedCacheInterceptorTest {
 		jedis.del(CacheKeyPrefix.TEST_CACHE_ALLUSERS_IDLIST + ":male");
 		List<Integer> ids3 = userService.listIdByGender("male");
 		logger.debug("第三次查询用户结果：" + JSON.toJSONString(ids3));
+		Thread.sleep(500);
 		List<Integer> ids4 = userService.listIdByGender("male");
 		logger.debug("第四次查询用户结果：" + JSON.toJSONString(ids4));
 		assertEquals(ids3, ids4);
 	}
 
 	@Test
-	public void testObjList() {
+	public void testObjList() throws InterruptedException {
 		List<User> userList1 = userService.listByGender("male");
 		logger.debug("第一次查询用户结果：" + JSON.toJSONString(userList1));
+		Thread.sleep(500);
 		List<User> userList2 = userService.listByGender("male");
 		logger.debug("第二次查询用户结果：" + JSON.toJSONString(userList2));
 		assertEquals(userList1, userList2);
@@ -98,6 +101,7 @@ public class AdvancedCacheInterceptorTest {
 	public void testReverse() throws Exception {
 		List<String> names1 = userService.listNewUsers();
 		logger.debug("第一次查询用户结果：" + JSON.toJSONString(names1));
+		Thread.sleep(500);
 		List<String> names2 = userService.listNewUsers();
 		logger.debug("第二次查询用户结果：" + JSON.toJSONString(names2));
 		User user = new User();
