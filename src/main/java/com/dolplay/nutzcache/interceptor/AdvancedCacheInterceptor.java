@@ -68,8 +68,9 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 			// 执行方法
 			chain.doChain();
 			// 获取方法返回值并增加相应缓存
-			List<?> returnObj = (List<?>) chain.getReturn();
-			AdvancedReturn2Cache ar2c = new AdvancedReturn2Cache(cacheDao(), cacheKey, cacheTimeout, returnObj,
+			@SuppressWarnings("unchecked")
+			List<?> cacheObj = new ArrayList((List<?>) chain.getReturn());
+			AdvancedReturn2Cache ar2c = new AdvancedReturn2Cache(cacheDao(), cacheKey, cacheTimeout, cacheObj,
 					cacheAn.reverse(), isEternalCacheKeySetValid, zsetEternalCacheKeySetName);
 			ar2c.start();
 		} else {
