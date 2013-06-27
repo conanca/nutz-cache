@@ -1,6 +1,7 @@
 package com.dolplay.nutzcache.dao;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.dolplay.nutzcache.type.Order;
@@ -13,7 +14,7 @@ import com.dolplay.nutzcache.type.Order;
 public interface AdvancedCacheDao extends CacheDao {
 
 	/**
-	 * 为有序集缓存的值增添一个成员，需指定该成员的score。
+	 * 为有序集缓存的值增添一个元素，需指定该元素的score。
 	 * 如果缓存不存在则创建这个缓存，并指定缓存超时时间(秒)；如果缓存存在，则超时时间不会被更新
 	 * 如果超时时间小于等于0，则为永久缓存
 	 * @param cacheKey
@@ -25,7 +26,7 @@ public interface AdvancedCacheDao extends CacheDao {
 	public void zAdd(String cacheKey, int seconds, double score, Object item) throws Exception;
 
 	/**
-	 * 为有序集缓存的值增添一个成员，需指定该成员的score
+	 * 为有序集缓存的值增添一个元素，需指定该元素的score
 	 * 如果缓存不存在则创建这个缓存。该缓存为永久缓存。
 	 * @param cacheKey
 	 * @param score
@@ -33,6 +34,28 @@ public interface AdvancedCacheDao extends CacheDao {
 	 * @throws Exception
 	 */
 	public void zAdd(String cacheKey, double score, Object item) throws Exception;
+
+	/**
+	 * 为有序集缓存的值增添多个元素其 score 值
+	 * 注意：元素必须是String类型，否则需要先行用com.alibaba.fastjson.JSON.toJSONString进行转换
+	 * 如果缓存不存在则创建这个缓存，并指定缓存超时时间(秒)；如果缓存存在，则超时时间不会被更新
+	 * 如果超时时间小于等于0，则为永久缓存
+	 * @param cacheKey
+	 * @param seconds
+	 * @param scoreItems
+	 * @throws Exception
+	 */
+	public void zAdd(String cacheKey, int seconds, Map<Double, String> scoreItems) throws Exception;
+
+	/**
+	 * 为有序集缓存的值增添多个元素其 score 值
+	 * 注意：元素必须是String类型，否则需要先行用com.alibaba.fastjson.JSON.toJSONString进行转换
+	 * 如果缓存不存在则创建这个缓存。该缓存为永久缓存。
+	 * @param cacheKey
+	 * @param scoreItems
+	 * @throws Exception
+	 */
+	public void zAdd(String cacheKey, Map<Double, String> scoreItems) throws Exception;
 
 	/**
 	 * 查询有序集缓存，按照区间及排序方式
@@ -175,7 +198,7 @@ public interface AdvancedCacheDao extends CacheDao {
 	public <T> List<T> zQueryAll(String cacheKey, Class<T> itemType) throws Exception;
 
 	/**
-	 * 删除有序集缓存的一部分成员，按照成员的值
+	 * 删除有序集缓存的一部分元素，按照元素的值
 	 * @param cacheKey
 	 * @param items
 	 * @throws Exception
@@ -183,7 +206,7 @@ public interface AdvancedCacheDao extends CacheDao {
 	public void zDel(String cacheKey, String... items) throws Exception;
 
 	/**
-	 * 删除有序集缓存的一部分成员，按照区间
+	 * 删除有序集缓存的一部分元素，按照区间
 	 * @param cacheKey
 	 * @param startIndex
 	 * @param endIndex
@@ -192,7 +215,7 @@ public interface AdvancedCacheDao extends CacheDao {
 	public void zDelByRank(String cacheKey, long startIndex, long endIndex) throws Exception;
 
 	/**
-	 * 删除有序集缓存的一部分成员，按照socre值的范围
+	 * 删除有序集缓存的一部分元素，按照socre值的范围
 	 * @param cacheKey
 	 * @param startIndex
 	 * @param endIndex

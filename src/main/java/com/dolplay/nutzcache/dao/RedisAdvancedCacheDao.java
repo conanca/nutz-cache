@@ -2,6 +2,7 @@ package com.dolplay.nutzcache.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import redis.clients.jedis.ShardedJedis;
@@ -47,6 +48,28 @@ public class RedisAdvancedCacheDao extends RedisCacheDao implements AdvancedCach
 
 	public void zAdd(String cacheKey, double score, Object item) throws Exception {
 		zAdd(cacheKey, -1, score, item);
+	}
+
+	public void zAdd(String cacheKey, int seconds, Map<Double, String> scoreItems) throws Exception {
+		ShardedJedis jedis = null;
+		try {
+			jedis = jedisPool.getResource();
+			boolean isNew = !jedis.exists(cacheKey);
+			jedis.zadd(cacheKey, scoreItems);
+			if (isNew && seconds > 0) {
+				jedis.expire(cacheKey, seconds);
+			}
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			if (jedis != null) {
+				jedisPool.returnResource(jedis);
+			}
+		}
+	}
+
+	public void zAdd(String cacheKey, Map<Double, String> scoreItems) throws Exception {
+		zAdd(cacheKey, -1, scoreItems);
 	}
 
 	public List<String> zQueryByRank(String cacheKey, long startIndex, long endIndex, Order order) throws Exception {
