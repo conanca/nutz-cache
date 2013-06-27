@@ -1,11 +1,14 @@
 package com.dolplay.nutzcache.interceptor;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSON;
 import com.dolplay.nutzcache.dao.AdvancedCacheDao;
 
 public class AdvancedReturn2Cache extends Thread {
@@ -40,10 +43,18 @@ public class AdvancedReturn2Cache extends Thread {
 				}
 				// 按items的顺序依次插入相应的缓存中
 				long now = System.currentTimeMillis();
+				Map<Double, String> scoreItems = new HashMap<Double, String>();
 				for (Object item : cacheObj) {
-					// 如果缓存超时时间设置的有效，则新增缓存时设置该超时时间，否则设置配置文件中所配置的超时时间
-					cacheDao.zAdd(cacheKey, cacheTimeout, now++, item);
+					String cacheValue = null;
+					if (CharSequence.class.isAssignableFrom(item.getClass())) {
+						cacheValue = item.toString();
+					} else {
+						cacheValue = JSON.toJSONString(item);
+					}
+					scoreItems.put((double) now++, cacheValue);
 				}
+				// 添加缓存，如果缓存超时时间设置的有效，则新增缓存时设置该超时时间，否则设置配置文件中所配置的超时时间
+				cacheDao.zAdd(cacheKey, cacheTimeout, scoreItems);
 				logger.debug("Set a new value for this cache:" + cacheKey);
 			} catch (Exception e) {
 				logger.error("Set cache error:" + cacheKey, e);
@@ -60,5 +71,4 @@ public class AdvancedReturn2Cache extends Thread {
 			}
 		}
 	}
-
 }
