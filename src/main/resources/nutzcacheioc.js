@@ -48,7 +48,7 @@ var ioc = {
 		]
 	},
 
-	// 配置了cacheDao示例
+	// 配置了 cacheDao 实例
 	cacheDao: {
 		type : "com.dolplay.nutzcache.dao.RedisCacheDao",
 		args : [	 {refer : 'jedisPool'}]
@@ -63,7 +63,7 @@ var ioc = {
 		}
 	},
 
-	// 配置了advancedCacheDao示例
+	// 配置了 advancedCacheDao 实例
 	advancedCacheDao: {
 		type : "com.dolplay.nutzcache.dao.RedisAdvancedCacheDao",
 		args : [{refer : 'jedisPool'}]
