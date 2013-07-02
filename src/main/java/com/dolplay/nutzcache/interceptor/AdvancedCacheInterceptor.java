@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.nutz.aop.InterceptorChain;
+import org.nutz.lang.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +46,7 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 			} catch (Exception e) {
 				logger.error("Read Cache error", e);
 			}
-			// 若缓存值不为空，则该方法直接返回缓存里相应的值
+			// 若缓存值不为空，则该方法直接返回缓存里相应的值STRING_ETERNAL_CACHE_KEY_SET_IS_VALID
 			if (cacheValue != null && cacheValue.size() > 0) {
 				chain.setReturnValue(cacheValue);
 				logger.debug("Get a value from this cache:" + cacheKey);
@@ -72,7 +73,16 @@ public class AdvancedCacheInterceptor extends CacheInterceptor {
 			List<?> cacheObj = new ArrayList((List<?>) chain.getReturn());
 			AdvancedReturn2Cache ar2c = new AdvancedReturn2Cache(cacheDao(), cacheKey, cacheTimeout, cacheObj,
 					cacheAn.reverse(), isEternalCacheKeySetValid, zsetEternalCacheKeySetName);
-			ar2c.start();
+			// 是否在新线程中插入缓存
+			boolean newThread = false;
+			String newThreadStr = cacheProp().get("cache-zsetSetUseNewThread");
+			newThread = Strings.isEmpty(newThreadStr) ? CacheConfig.ZSET_ETERNAL_CACHE_KEY_SET_IS_VALID : Boolean
+					.valueOf(newThreadStr);
+			if (newThread) {
+				ar2c.start();
+			} else {
+				ar2c.run();
+			}
 		} else {
 			logger.error("The method annotation : CacheType Error!", new RuntimeException(
 					"The method annotation : CacheType Error"));

@@ -6,6 +6,8 @@ public class CacheConfig {
 	 * 缓存名前缀和(一个或多个)后缀拼接时用的间隔符号 
 	 */
 	public static final String CACHEKEY_DELIMITER = ":";
+	public static final boolean CACHE_STRINGSETUSENEWTHREAD = true;
+	public static final boolean CACHE_ZSETSETUSENEWTHREAD = true;
 	public static final boolean STRING_ETERNAL_CACHE_KEY_SET_IS_VALID = true;
 	public static final boolean ZSET_ETERNAL_CACHE_KEY_SET_IS_VALID = true;
 	public static final String STRING_ETERNAL_CACHE_KEY_SET_NAME = "nutz-cache:StringEternalCacheKeySet";
